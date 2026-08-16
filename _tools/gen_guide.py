@@ -1,0 +1,305 @@
+# -*- coding: utf-8 -*-
+"""
+지오테스 가이드(정보성 원고) 생성기
+  python _tools/gen_guide.py
+  → dist/guide/index.html + dist/guide/{slug}/index.html
+
+문서형 스타일(nova-post.css)을 씁니다. 랜딩형과 다릅니다.
+새 글은 GUIDES 목록에 항목만 추가하면 됩니다.
+
+원칙
+- 어려운 말을 먼저 쓰지 않습니다. 쉬운 말로 쓰고 괄호에 용어를 답니다.
+- 각 글 맨 위에 답변 박스를 둡니다. AI 검색이 그 문단을 인용해 갑니다.
+- 남의 글을 옮기지 않습니다. 구조만 참고하고 문장은 새로 씁니다.
+"""
+import os, sys, html
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from gen_solution import relativize, SITE, TEL, TEL_RAW
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+OUT = os.path.join(ROOT, "dist", "guide")
+
+e = lambda s: html.escape(str(s), quote=True)
+jstr = lambda s: '"%s"' % str(s).replace("\\", "\\\\").replace('"', '\\"')
+
+# ---------------------------------------------------------------- 원고
+
+GUIDES = [
+{
+ "slug": "ipcc",
+ "cat": "콜센터 기초",
+ "title": "IPCC가 뭔가요? 콜센터 구축을 처음 알아보는 분들을 위한 설명",
+ "desc": "IP-PBX, CTI, IVR, 녹취, 상담화면. 콜센터 견적서에 나오는 말들을 쉬운 말로 풀었습니다. 전화 한 통이 상담이 되기까지의 과정과 구축 절차, 업체 고르는 기준까지.",
+ "h1": "IPCC가 뭔가요?",
+ "sub": "콜센터 견적서를 처음 받아보면 모르는 말이 절반입니다.<br>그 말들이 실제로 무슨 일을 하는지부터 정리했습니다.",
+ "answer_q": "IPCC가 무엇인가요?",
+ "answer": "IPCC는 <b>인터넷 전화로 돌아가는 콜센터 시스템</b>입니다. "
+   "전화를 받아 나눠주는 장치, 자동 안내, 상담사에게 배분하는 기능, 상담 화면, 녹취를 "
+   "<span class='hl'>하나로 묶어 놓은 것</span>을 말합니다. "
+   "예전에는 이 다섯 가지를 각각 다른 장비로 샀지만, 지금은 인터넷 회선 위에서 한 시스템으로 묶습니다. "
+   "그래서 회선을 늘리는 데 공사가 필요 없고, 사무실을 옮겨도 번호가 그대로입니다.",
+ "body": [
+  ("전화 한 통이 상담이 되기까지", [
+    ("p", "고객이 전화를 겁니다. 그 한 통이 상담사에게 닿기까지 다섯 단계를 지납니다. "
+          "견적서에 적힌 낯선 말들은 대부분 이 다섯 단계 중 하나를 가리킵니다."),
+    ("table", [
+      ["단계", "견적서에 쓰이는 말", "실제로 하는 일"],
+      ["1", "IP-PBX (교환기)", "걸려온 전화를 받아서 어디로 보낼지 나눠주는 장치입니다. 회사 전화의 중심입니다."],
+      ["2", "IVR / ARS (자동안내)", "\"상담원 연결은 1번\" 하는 안내입니다. 사람이 받지 않아도 되는 문의를 여기서 거릅니다."],
+      ["3", "CTI (지능형 분배)", "이 전화를 누구에게 넘길지 정합니다. 놀고 있는 사람, 그 업무를 잘하는 사람, 지난번에 응대했던 사람을 골라 연결합니다."],
+      ["4", "CRM (상담화면)", "전화가 연결되는 순간 상담사 화면에 고객 정보가 뜹니다. 누구인지 물어보지 않아도 됩니다."],
+      ["5", "녹취", "통화 내용을 저장합니다. 나중에 확인이 필요할 때 찾아 듣습니다."],
+    ]),
+    ("p", "이 다섯이 따로 놀면 콜센터가 아닙니다. 전화는 오는데 누구 화면에도 안 뜨거나, "
+          "화면은 뜨는데 녹취가 안 되는 상태가 됩니다. <strong>다섯 개가 서로 연결돼야 비로소 콜센터입니다.</strong>"),
+    ("callout", "이 중에서 가장 자주 문제가 되는 것은 3번 CTI입니다. "
+                "전화가 몰릴 때 누구에게 넘길지 정하는 기준이 여기서 나오기 때문입니다. "
+                "대기 시간이 길어지는 것도, 특정 상담사에게만 전화가 몰리는 것도 대부분 이 부분의 문제입니다."),
+  ]),
+  ("구축은 어떻게 진행되나요", [
+    ("p", "보통 여섯 단계로 진행합니다. 규모에 따라 다르지만 한 달에서 세 달 정도 걸립니다."),
+    ("list", [
+      "<strong>요구 정리</strong> — 지금 전화를 몇 명이 받는지, 무엇이 불편한지 확인합니다.",
+      "<strong>설계와 견적</strong> — 필요한 구성만 골라 제안합니다. 안 쓰는 기능은 빼야 합니다.",
+      "<strong>설치</strong> — 회선을 열고 시스템을 올립니다.",
+      "<strong>연동</strong> — 쓰시던 사내 시스템과 상담 화면을 연결합니다.",
+      "<strong>시험 운영</strong> — 일부 인원으로 먼저 써 봅니다.",
+      "<strong>오픈과 운영</strong> — 전체로 넓히고 계속 손봅니다.",
+    ]),
+    ("p", "기간을 좌우하는 것은 장비 설치가 아니라 <strong>4번 연동</strong>입니다. "
+          "기존에 쓰던 주문 시스템이나 고객 관리 프로그램과 상담 화면을 어디까지 연결할지, "
+          "이 범위를 처음에 정하지 않으면 일정이 계속 밀립니다. "
+          "견적 단계에서 <strong>연동 범위를 문서로 못 박아 두는 것</strong>이 안전합니다."),
+  ]),
+  ("업체를 고를 때 확인할 네 가지", [
+    ("p", "콜센터는 한 번 깔면 몇 년을 씁니다. 가격표만 보고 정하면 나중에 바꾸기가 어렵습니다. "
+          "다음 네 가지는 계약 전에 확인하시는 편이 좋습니다."),
+    ("h3", "1. 직접 만든 것인가, 사 와서 파는 것인가"),
+    ("p", "교환기와 상담 프로그램을 <strong>직접 개발한 회사</strong>는 화면 항목 하나를 바꿔달라고 하면 그 자리에서 고칩니다. "
+          "외국 제품을 사 와서 파는 회사는 본사에 확인을 요청해야 하고, 대개 몇 주가 걸립니다. "
+          "업무가 조금이라도 특수하다면 이 차이가 크게 벌어집니다."),
+    ("h3", "2. 회선도 그 회사 것인가"),
+    ("p", "이건 잘 안 물어보시는데 <strong>장애가 났을 때 가장 크게 갈리는 부분</strong>입니다. "
+          "시스템은 직접 만들었어도 회선은 통신사에서 받아 쓰는 회사가 많습니다. "
+          "그러면 전화가 안 될 때 시스템 문제인지 회선 문제인지를 두 회사가 서로 미룹니다. "
+          "그동안 전화는 계속 안 됩니다. "
+          "<strong>회선까지 직접 공급하는 회사</strong>는 연락할 곳이 한 곳입니다."),
+    ("h3", "3. 우리 업종을 해 봤는가"),
+    ("p", "업종마다 걸리는 지점이 다릅니다. "
+          "병원은 진료 시스템과의 연결, 공공기관은 망 분리, 금융은 녹취 보관 규정이 핵심입니다. "
+          "해당 업종 경험이 없으면 그 시행착오를 고객이 떠안게 됩니다."),
+    ("h3", "4. 깔고 나서 누가 봐주는가"),
+    ("p", "구축보다 그 뒤가 깁니다. 장애가 났을 때 몇 시간 안에 오는지, 담당자가 정해져 있는지, "
+          "기능 수정 요청은 어떻게 처리되는지를 <strong>계약 전에 문서로</strong> 받아 두시는 편이 좋습니다."),
+  ]),
+  ("녹취는 개인정보입니다", [
+    ("p", "녹취 파일에는 고객의 목소리와 연락처, 상담 내용이 그대로 들어 있습니다. "
+          "그래서 녹음이 되느냐보다 <strong>어디에 저장하고 누가 들을 수 있느냐</strong>가 더 중요합니다."),
+    ("list", [
+      "<strong>어디에 저장할지</strong> — 클라우드에 둘지, 회사 서버에 직접 둘지 고를 수 있어야 합니다. 규정상 외부 보관이 안 되는 곳이 있습니다.",
+      "<strong>얼마나 보관할지</strong> — 업종에 따라 보관 기간이 정해져 있는 경우가 있습니다.",
+      "<strong>누가 들을 수 있는지</strong> — 상담사 본인 것만 볼지, 팀장이 전체를 볼지 나눌 수 있어야 합니다.",
+    ]),
+    ("p", "지오테스는 기본으로 AWS 클라우드에 보관하고, 요청하시면 고객사 서버에 직접 둡니다. "
+          "보관 기간과 열람 권한도 구축할 때 함께 정합니다."),
+  ]),
+  ("비용은 어떻게 구성되나요", [
+    ("p", "견적서가 복잡해 보여도 항목은 네 가지입니다."),
+    ("table", [
+      ["항목", "내용", "언제 내는지"],
+      ["시스템 구축", "교환기, 상담 프로그램, 설치, 교육", "처음 한 번"],
+      ["회선 이용료", "인터넷전화 회선, 대표번호, 통화료", "매달"],
+      ["유지보수", "장애 대응, 기능 수정, 점검", "별도 계약"],
+      ["부가서비스", "문자, 팩스, 영상상담 등 고른 것만", "고른 것만"],
+    ]),
+    ("p", "여기서 자주 새는 부분이 <strong>상담 프로그램 값</strong>입니다. "
+          "회사에 따라 상담사 한 명이 늘 때마다 프로그램 사용료를 매달 더 받습니다. "
+          "인원이 늘수록 비용이 계속 올라가는 구조입니다. "
+          "지오테스는 CRM과 녹취, 통계 프로그램을 시스템 구축에 포함해 드립니다. "
+          "프로그램만 따로 구매하는 항목이 없습니다."),
+  ]),
+ ],
+ "faq": [
+  ("몇 명부터 콜센터를 만들 수 있나요?",
+   "정해진 최소 인원은 없습니다. 전화를 두세 명이 나눠 받는 곳도 구축합니다. 인원보다는 통화가 몰리는 정도와 기록을 남겨야 하는지가 기준이 됩니다."),
+  ("쓰던 전화번호를 그대로 쓸 수 있나요?",
+   "번호 이전으로 유지할 수 있습니다. 안내문과 명함을 다시 만들지 않아도 됩니다. 절차는 저희가 진행합니다."),
+  ("인터넷이 끊기면 전화도 안 되나요?",
+   "회선을 이중으로 두거나 휴대폰으로 넘기는 방식으로 대비합니다. 구축할 때 함께 구성합니다."),
+  ("기존에 쓰던 프로그램이 있는데 버려야 하나요?",
+   "그대로 두고 전화 기능만 붙이는 방식도 가능합니다. 어디까지 연결할지는 현황을 보고 정합니다."),
+  ("AI를 꼭 넣어야 하나요?",
+   "필요한 곳만 넣으면 됩니다. 반복 문의가 많은 곳은 효과가 크고, 통화량이 적은 곳은 녹취와 상담 이력만으로도 충분합니다."),
+ ],
+},
+]
+
+# ---------------------------------------------------------------- 렌더
+
+def block(kind, val):
+    if kind == "p":
+        return f"<p>{val}</p>"
+    if kind == "h3":
+        return f"<h3>{e(val)}</h3>"
+    if kind == "callout":
+        return f'<div class="callout"><p>{val}</p></div>'
+    if kind == "list":
+        return "<ul>" + "".join(f"<li>{v}</li>" for v in val) + "</ul>"
+    if kind == "table":
+        head = "".join(f"<th>{e(c)}</th>" for c in val[0])
+        rows = "".join("<tr>" + "".join(
+            (f"<th>{e(c)}</th>" if n == 0 else f"<td>{c}</td>")
+            for n, c in enumerate(r)) + "</tr>" for r in val[1:])
+        return f'<div class="table-scroll"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div>'
+    return ""
+
+
+def render(g):
+    faq_ld = ",".join(
+        '{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+        % (jstr(q), jstr(a)) for q, a in g["faq"])
+
+    secs = ""
+    for h2, blocks in g["body"]:
+        secs += f"<h2>{e(h2)}</h2>" + "".join(block(k, v) for k, v in blocks)
+
+    faqs = "".join(
+        f'<details><summary>{e(q)}</summary><div class="a">{e(a)}</div></details>'
+        for q, a in g["faq"])
+
+    return f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{e(g["title"])} | 지오테스</title>
+<meta name="description" content="{e(g["desc"])}">
+<link rel="canonical" href="{SITE}/guide/{g["slug"]}/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{e(g["title"])}">
+<meta property="og:description" content="{e(g["desc"])}">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/nova-post.css">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{faq_ld}]}}</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a href="/" class="logo">지오<b>테스</b></a>
+    <a href="tel:{TEL_RAW}" class="nav-call">{TEL}</a>
+  </div>
+</header>
+
+<div class="post-hero">
+  <div class="wrap">
+    <p class="crumb"><a href="/">홈</a> · <a href="/guide/">가이드</a> · {e(g["cat"])}</p>
+    <span class="eyebrow">{e(g["cat"])}</span>
+    <h1>{g["h1"]}</h1>
+    <p class="meta">{g["sub"]}</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <article>
+    <div class="answer">
+      <span class="lab">{e(g["answer_q"])}</span>
+      <p>{g["answer"]}</p>
+    </div>
+    {secs}
+
+    <h2>자주 묻는 것</h2>
+    <div class="faq">{faqs}</div>
+
+    <div class="cta">
+      <div class="dot"></div>
+      <h2>어디부터 손대야 할지 모르시겠다면</h2>
+      <p>지금 쓰시는 전화 환경을 보고, 필요한 것만 골라 알려드립니다. 상담은 무료입니다.</p>
+      <div class="btns">
+        <a href="tel:{TEL_RAW}" class="btn btn-white">{TEL}</a>
+        <a href="/contact/" class="btn btn-line">상담 신청</a>
+      </div>
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo">지오<b>테스</b></div>
+    ㈜지오테스솔루션 · 대표이사 신명남 · 사업자등록번호 144-81-03835<br>
+    경기 고양시 덕양구 삼막3길 5 고양삼송듀클래스 904호 · 고객센터 {TEL}<br>
+    © 2006 ZioTEs Solution Inc.
+  </div>
+</footer>
+
+</body>
+</html>
+'''
+
+
+def render_index():
+    cards = "".join(
+      f'<a href="/guide/{g["slug"]}/" class="post-card">'
+      f'<span class="tag">{e(g["cat"])}</span>'
+      f'<h3>{e(g["title"])}</h3><p>{e(g["desc"])}</p></a>' for g in GUIDES)
+    return f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜센터 가이드 | 지오테스</title>
+<meta name="description" content="콜센터 구축을 처음 알아보는 분들을 위한 설명. 견적서에 나오는 용어부터 업체 고르는 기준까지 쉬운 말로 정리했습니다.">
+<link rel="canonical" href="{SITE}/guide/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/nova-post.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a href="/" class="logo">지오<b>테스</b></a>
+    <a href="tel:{TEL_RAW}" class="nav-call">{TEL}</a>
+  </div>
+</header>
+<div class="post-hero">
+  <div class="wrap">
+    <p class="crumb"><a href="/">홈</a> · 가이드</p>
+    <span class="eyebrow">Guide</span>
+    <h1>콜센터, 어렵게 설명하지 않겠습니다</h1>
+    <p class="meta">견적서에 나오는 말부터 업체 고르는 기준까지 쉬운 말로 정리했습니다.</p>
+  </div>
+</div>
+<div class="wrap"><div class="post-list">{cards}</div></div>
+<footer>
+  <div class="wrap">
+    <div class="flogo">지오<b>테스</b></div>
+    ㈜지오테스솔루션 · 고객센터 {TEL} · © 2006 ZioTEs Solution Inc.
+  </div>
+</footer>
+</body>
+</html>
+'''
+
+
+def write(path, content, depth):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(relativize(content, depth))
+    print("  ok", os.path.relpath(path, ROOT).replace("\\", "/"))
+
+
+def main():
+    print("가이드 생성")
+    write(os.path.join(OUT, "index.html"), render_index(), 1)
+    for g in GUIDES:
+        write(os.path.join(OUT, g["slug"], "index.html"), render(g), 2)
+    print(f"\n총 {len(GUIDES) + 1}개 생성 완료")
+
+
+if __name__ == "__main__":
+    main()

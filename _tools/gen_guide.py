@@ -116,7 +116,7 @@ GUIDES = [
     ("p", "여기서 자주 새는 부분이 <strong>상담 프로그램 값</strong>입니다. "
           "회사에 따라 상담사 한 명이 늘 때마다 프로그램 사용료를 매달 더 받습니다. "
           "인원이 늘수록 비용이 계속 올라가는 구조입니다. "
-          "지오테스는 CRM과 녹취, 통계 프로그램을 시스템 구축에 포함해 드립니다. "
+          "지오테스는 고객관리(CRM)와 녹취, 통계 프로그램을 시스템 구축에 포함해 드립니다. "
           "프로그램만 따로 구매하는 항목이 없습니다."),
   ]),
  ],
@@ -165,7 +165,7 @@ GUIDES = [
     ("p", "회사에 따라 상담사 한 명이 늘 때마다 프로그램 사용료를 매달 더 받습니다. "
           "10석으로 시작해 30석이 되면 그 항목만 세 배가 됩니다. "
           "<strong>사람이 늘수록 비용이 따라 올라가는 구조인지</strong>를 계약 전에 확인하셔야 합니다."),
-    ("callout", "지오테스는 CRM과 녹취, 통계 프로그램을 시스템 구축에 포함해 드립니다. "
+    ("callout", "지오테스는 고객관리(CRM)와 녹취, 통계 프로그램을 시스템 구축에 포함해 드립니다. "
                 "프로그램만 따로 구매하는 항목이 없습니다. 유지보수는 별도 계약입니다."),
   ]),
   ("견적서에서 물어볼 다섯 가지", [
@@ -464,7 +464,156 @@ def render_index():
     <p class="meta">견적서에 나오는 말부터 업체 고르는 기준까지 쉬운 말로 정리했습니다.</p>
   </div>
 </div>
-<div class="wrap"><div class="post-list">{cards}</div></div>
+<div class="wrap"><div class="post-list">{cards}</div>
+<div class="callout" style="margin-bottom:44px"><p>견적서에 모르는 말이 있으신가요? <a class="inlink" href="/glossary/">콜센터 용어집</a>에 IPCC, CTI, IVR 같은 말을 쉬운 말로 정리해 두었습니다.</p></div></div>
+<footer>
+  <div class="wrap">
+    <div class="flogo">지오<b>테스</b></div>
+    ㈜지오테스솔루션 · 고객센터 {TEL} · © 2006 ZioTEs Solution Inc.
+  </div>
+</footer>
+</body>
+</html>
+'''
+
+
+# ---------------------------------------------------------------- 용어집
+# 전문용어는 검색해서 들어오는 입구입니다. 그래서 지우지 않고 그대로 둡니다.
+# 대신 옆에 쉬운 말을 붙여서, 모르고 들어온 사람도 이해하고 나가게 만듭니다.
+
+GLOSSARY = [
+ ("전화 시스템", [
+  ("IPCC", "인터넷 전화로 돌아가는 콜센터 시스템",
+   "교환기, 자동안내, 상담 화면, 녹취를 하나로 묶어 놓은 것입니다. IP Contact Center의 줄임말입니다.", "/solution/ipcc/"),
+  ("IP-PBX", "걸려온 전화를 받아 나눠주는 장치",
+   "회사 전화의 중심입니다. 예전에는 사무실에 놓는 큰 장비였고, 지금은 인터넷 회선 위에서 돌아갑니다.", "/solution/ipcc/"),
+  ("CTI", "전화와 컴퓨터 화면을 연결하는 기능",
+   "전화가 오면 고객 정보를 화면에 띄우고, 화면의 번호를 누르면 전화가 걸리게 합니다.", "/guide/cti/"),
+  ("ACD / 호분배", "걸려온 전화를 상담원에게 나눠주는 규칙",
+   "놀고 있는 사람, 그 업무를 담당하는 사람, 지난번에 응대한 사람 중에서 정해진 기준으로 고릅니다.", "/solution/ipcc/"),
+  ("VoIP", "인터넷으로 하는 전화",
+   "전화선 대신 인터넷 회선으로 통화합니다. 회선을 늘리는 데 공사가 필요 없습니다.", "/solution/voip/"),
+  ("SIP", "인터넷전화가 서로 통하게 하는 약속",
+   "장비와 서비스가 다른 회사 것이어도 이 규격을 따르면 연결됩니다.", None),
+  ("내선", "회사 안에서 쓰는 짧은 번호",
+   "지점이 여러 곳이어도 하나로 묶으면 내선끼리는 통화료가 들지 않습니다.", "/solution/voip/"),
+ ]),
+ ("자동응답", [
+  ("ARS", "사람 대신 안내 음성이 나가는 자동응답",
+   "\"상담원 연결은 0번\" 같은 안내입니다. 사람이 받지 않아도 되는 문의를 여기서 거릅니다.", "/solution/ivr/"),
+  ("IVR", "누른 번호나 말한 내용에 따라 갈라지는 자동안내",
+   "ARS보다 넓은 말입니다. 조건에 따라 다른 안내로 넘어가는 것까지 포함합니다.", "/solution/ivr/"),
+  ("보이는 ARS", "음성 대신 화면에서 고르는 자동안내",
+   "안내를 끝까지 듣고 번호를 누를 필요가 없습니다. 스마트폰 화면에서 바로 고릅니다.", "/solution/aicc/"),
+  ("TTS", "글을 음성으로 만들어 주는 기술",
+   "안내 문구를 바꿀 때 성우 녹음을 다시 하지 않아도 됩니다.", "/solution/ivr/"),
+  ("콜백", "부재중일 때 회신 번호를 남기는 기능",
+   "통화 중이거나 못 받았을 때 번호를 받아두고, 그 목록을 상담 화면에 띄웁니다.", "/solution/ivr/"),
+  ("오토콜", "정해진 명단에 자동으로 거는 기능",
+   "안내나 설문을 대량으로 돌릴 때 씁니다.", "/solution/ivr/"),
+ ]),
+ ("상담 관리", [
+  ("CRM", "고객관리 프로그램",
+   "상담용 CRM은 전화가 오는 순간 발신번호로 고객을 찾아 화면에 띄운다는 점이 일반 CRM과 다릅니다.", "/solution/crm/"),
+  ("스크린 팝업", "전화가 울릴 때 고객 정보가 뜨는 것",
+   "누구인지 물어보지 않고 바로 통화를 시작할 수 있습니다.", "/solution/crm/"),
+  ("클릭 투 콜", "화면의 번호를 눌러 바로 거는 기능",
+   "번호를 옮겨 적다가 잘못 누르는 일이 없어집니다.", "/solution/crm/"),
+  ("전광판", "상담원 상태를 한 화면에 띄운 현황판",
+   "지금 몇 통이 대기 중이고 누가 통화 중인지 실시간으로 보입니다.", "/demo/"),
+  ("감청 / 속삭임", "관리자가 통화를 듣고 안내를 넣는 기능",
+   "속삭임은 고객에게 들리지 않고 상담원에게만 들립니다. 신입 교육에 씁니다.", "/solution/ipcc/"),
+ ]),
+ ("AI", [
+  ("AICC", "AI를 붙인 콜센터",
+   "자주 오는 문의를 사람 연결 없이 처리하고 통화 내용을 자동으로 정리합니다.", "/solution/aicc/"),
+  ("STT", "말을 글로 바꾸는 기술",
+   "녹취를 글로 풀어 검색하거나 요약할 수 있게 만듭니다.", "/solution/aicc/"),
+  ("AI 통화요약", "통화 내용을 자동으로 정리해 주는 기능",
+   "4분짜리 통화를 세 줄로 줄입니다. 다시 듣지 않아도 무슨 통화였는지 알 수 있습니다.", "/demo/"),
+  ("상담원 인계", "AI가 처리 못한 통화를 사람에게 넘기는 것",
+   "넘길 때 지금까지의 대화 요약을 함께 전달해 고객이 같은 설명을 반복하지 않게 합니다.", "/solution/aicc/"),
+ ]),
+ ("번호 · 회선", [
+  ("대표번호", "1544처럼 회사를 대표하는 번호",
+   "여러 회선과 지점을 하나의 번호로 묶습니다.", "/solution/voip/"),
+  ("번호이동", "쓰던 번호를 그대로 옮기는 것",
+   "안내문과 명함을 다시 만들지 않아도 됩니다.", "/solution/voip/"),
+  ("안심번호", "실제 번호를 감추고 연결하는 번호",
+   "상담사나 기사의 개인 번호가 고객에게 남지 않습니다.", "/solution/extra/"),
+  ("착신전환", "받지 못한 전화를 다른 번호로 넘기는 기능",
+   "사무실 전화를 휴대폰으로 넘길 때 씁니다.", "/solution/voip/"),
+ ]),
+]
+
+
+def render_glossary():
+    secs = ""
+    for cat, items in GLOSSARY:
+        rows = ""
+        for term, short, long_, link in items:
+            name = f'<strong>{e(term)}</strong>'
+            more = f' <a class="inlink" href="{link}">자세히</a>' if link else ""
+            rows += (f'<tr><th>{name}</th><td>{e(short)}<br>'
+                     f'<span style="color:var(--slate-500)">{e(long_)}</span>{more}</td></tr>')
+        secs += (f'<h2>{e(cat)}</h2><div class="table-scroll"><table>'
+                 f'<thead><tr><th style="width:34%">용어</th><th>쉬운 말로</th></tr></thead>'
+                 f'<tbody>{rows}</tbody></table></div>')
+
+    count = sum(len(i) for _, i in GLOSSARY)
+    return f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜센터 용어집 | IPCC·CTI·IVR·ACD 쉽게 정리 | 지오테스</title>
+<meta name="description" content="콜센터 견적서와 제안서에 나오는 용어 {count}개를 쉬운 말로 정리했습니다. IPCC, IP-PBX, CTI, ACD, IVR, ARS, STT, AICC.">
+<link rel="canonical" href="{SITE}/glossary/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="콜센터 용어집 | 지오테스">
+<meta property="og:description" content="견적서에 나오는 콜센터 용어 {count}개를 쉬운 말로 정리했습니다.">
+<meta property="og:locale" content="ko_KR">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/nova-post.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a href="/" class="logo">지오<b>테스</b></a>
+    <a href="tel:{TEL_RAW}" class="nav-call">{TEL}</a>
+  </div>
+</header>
+<div class="post-hero">
+  <div class="wrap">
+    <p class="crumb"><a href="/">홈</a> · 용어집</p>
+    <span class="eyebrow">Glossary</span>
+    <h1>콜센터 용어집</h1>
+    <p class="meta">견적서와 제안서에 나오는 말 {count}개를 쉬운 말로 옮겼습니다.</p>
+  </div>
+</div>
+<div class="wrap">
+  <article>
+    <div class="answer">
+      <span class="lab">왜 어려운 말을 그대로 쓰나요?</span>
+      <p>
+        업계에서 쓰는 말을 임의로 바꾸면 <span class="hl">정작 그 말로 검색하시는 분들이 못 찾습니다.</span>
+        그래서 용어는 그대로 두고, 옆에 쉬운 말을 함께 적었습니다.
+        견적서를 받으셨는데 모르는 말이 있다면 여기서 찾아보시면 됩니다.
+      </p>
+    </div>
+    {secs}
+    <div class="cta">
+      <div class="dot"></div>
+      <h2>용어보다 지금 상황이 궁금하시면</h2>
+      <p>지금 쓰시는 전화 환경을 보고 무엇이 필요한지부터 알려드립니다. 상담은 무료입니다.</p>
+      <div class="btns">
+        <a href="tel:{TEL_RAW}" class="btn btn-white">{TEL}</a>
+        <a href="/contact/" class="btn btn-line">상담 신청</a>
+      </div>
+    </div>
+  </article>
+</div>
 <footer>
   <div class="wrap">
     <div class="flogo">지오<b>테스</b></div>
@@ -486,9 +635,10 @@ def write(path, content, depth):
 def main():
     print("가이드 생성")
     write(os.path.join(OUT, "index.html"), render_index(), 1)
+    write(os.path.join(ROOT, "dist", "glossary", "index.html"), render_glossary(), 1)
     for g in GUIDES:
         write(os.path.join(OUT, g["slug"], "index.html"), render(g), 2)
-    print(f"\n총 {len(GUIDES) + 1}개 생성 완료")
+    print(f"\n총 {len(GUIDES) + 2}개 생성 완료 (용어집 포함)")
 
 
 if __name__ == "__main__":

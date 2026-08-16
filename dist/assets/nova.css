@@ -1,6 +1,6 @@
 /* ==========================================================================
    Nova (퍼플/그린) — 랜딩 페이지 공용 스타일
-   전국콜비즈 dist/index.html <style> 블록에서 추출, 비트웨이브용으로 이식
+   전국콜비즈 dist/index.html <style> 블록에서 추출, 지오테스용으로 이식
    대상: 홈 / 솔루션 / 활용사례 / 업종별 / 요금 / 회사소개 등 랜딩형 페이지
    문서형(정보글·지역 페이지)은 nova-post.css 사용
    ========================================================================== */
@@ -55,17 +55,19 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdro
 .nav-links{display:flex;gap:26px}
 .nav-links a{font-size:15px;font-weight:600;color:var(--slate-600)}
 .nav-links a:hover{color:var(--brand)}
-.nav-call{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-weight:800;font-size:15px;border-radius:999px;padding:10px 18px}
-.nav-call small{color:var(--sun);font-size:10.5px;font-weight:700;display:block;line-height:1}
+/* 전화 버튼 — 한 줄, 메뉴와 같은 무게감으로 */
+.nav-call{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 17px;background:#fff;color:var(--ink);border:1.5px solid var(--slate-200);border-radius:999px;font-weight:700;font-size:15px;line-height:1;white-space:nowrap;transition:border-color .16s,color .16s}
+.nav-call svg{color:var(--brand);transition:color .16s}
+.nav-call:hover{border-color:var(--brand);color:var(--brand)}
 
-/* 드롭다운 — 비트웨이브 추가분(콜비즈는 1단 메뉴라 없었음) */
+/* 드롭다운 — 지오테스 추가분(콜비즈는 1단 메뉴라 없었음) */
 .has-sub{position:relative}
 .has-sub>.sub{position:absolute;left:50%;top:100%;transform:translateX(-50%);min-width:220px;background:#fff;border:1px solid var(--slate-200);border-radius:16px;padding:10px;box-shadow:0 18px 40px -16px rgba(17,12,31,.25);opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:opacity .16s,transform .16s,visibility .16s}
 .has-sub:hover>.sub,.has-sub:focus-within>.sub{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .sub a{display:block;padding:10px 14px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--slate-600)}
 .sub a:hover{background:var(--slate-50);color:var(--brand)}
 
-/* 모바일 메뉴 — 비트웨이브 추가분(메뉴 항목이 많아 필수) */
+/* 모바일 메뉴 — 지오테스 추가분(메뉴 항목이 많아 필수) */
 .nav-burger{display:none;background:none;border:0;width:42px;height:42px;border-radius:12px;cursor:pointer;color:var(--ink)}
 .nav-burger:hover{background:var(--slate-50)}
 .drawer{position:fixed;inset:0;z-index:100;background:rgba(22,18,31,.5);display:none}
@@ -87,7 +89,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdro
 .hero-center h1{font-size:54px;font-weight:800;line-height:1.26;letter-spacing:-.02em}
 .hero-center .sub{color:var(--slate-600);font-size:17.5px;line-height:1.9;max-width:500px;margin:30px auto 0}
 .hero-center .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:34px}
-@media(max-width:860px){.hero-center h1{font-size:34px;line-height:1.32}.hero-center .sub{font-size:16px;max-width:420px}}
+/* 하위 페이지 히어로 — 홈보다 한 단계 작게 */
+.hero-center.compact h1{font-size:38px;line-height:1.32}
+.hero-center.compact .sub{font-size:16.5px;line-height:1.8;margin-top:22px}
+@media(max-width:860px){
+  .hero-center h1{font-size:34px;line-height:1.32}
+  .hero-center .sub{font-size:16px;max-width:420px}
+  .hero-center.compact h1{font-size:27px}
+}
 
 /* ---------- 퍼플 블록 ---------- */
 .purple{position:relative;overflow:hidden;background:var(--brand);border-radius:34px;padding:52px 48px;box-shadow:0 30px 60px -20px rgba(109,74,255,.5);margin-top:52px}

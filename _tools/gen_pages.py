@@ -509,6 +509,29 @@ def page_cases():
       + sec("Records", "업종별 구축 내역", body) + FOOTER)
 
 
+# 연혁 — (연도, 제목, 설명, 강조여부)
+# TODO 확인: 연도와 항목을 사장님께 받아 채울 것. 아래는 확인된 것만 넣은 상태.
+HISTORY = [
+ ("2006", "인터넷전화(VoIP) 서비스 사업 시작",
+  "기업용 인터넷전화 회선 공급으로 사업을 시작했습니다.", True),
+ ("2008", "㈜지오테스솔루션 설립",
+  "개발법인을 세우고 IP 교환기와 상담 애플리케이션을 직접 개발하기 시작했습니다.", True),
+ ("연도 확인", "전화영어 교육기업 통신 인프라 공급",
+  "다수 강사가 정해진 시간에 동시에 통화하는 전화영어 서비스에 회선과 교환 시스템을 공급했습니다. "
+  "통화가 한 시간대에 몰리는 환경에서 안정성을 검증한 사례입니다.", False),
+ ("연도 확인", "호텔 체인 전화 시스템 구축",
+  "객실과 프런트, 부서 내선을 하나의 체계로 묶고 예약·문의 응대 환경을 구성했습니다. "
+  "전화가 끊기면 안 되는 업종에서 운영해 온 사례입니다.", False),
+ ("2015", "㈜비트웨이브 설립",
+  "판매법인을 세워 개발과 공급 체계를 나눴습니다.", False),
+ ("2023", "통신판매업 신고",
+  "제2023-고양덕양구-0487호.", False),
+ ("2026", "AI 컨택센터 정식 제공",
+  "AI 통화요약, AI 응대, 보이는 ARS를 정식 서비스로 제공하기 시작했습니다. "
+  "기존 고객사는 추가 구축 없이 적용됩니다.", True),
+]
+
+
 def page_about():
     body = '''
 <div class="table-scroll">
@@ -540,7 +563,17 @@ def page_about():
              "회선을 공급하면서 교환기와 상담 프로그램까지 직접 만드는 곳은 많지 않습니다.",
              '<a href="/">홈</a> · 회사소개')
       + sec("Business", "하는 일", biz)
-      + sec("Company", "회사 정보", body, bg=True, narrow=True) + FOOTER)
+      + sec("History", "걸어온 길", hist_html(), bg=True)
+      + sec("Company", "회사 정보", body, narrow=True) + FOOTER)
+
+
+def hist_html():
+    rows = "".join(
+      f'<div class="hist-item{" on" if on else ""}">'
+      f'<div class="hist-yr">{e(y)}</div>'
+      f'<div class="hist-body"><h4>{e(t)}</h4><p>{e(d)}</p></div></div>'
+      for y, t, d, on in HISTORY)
+    return f'<div class="hist">{rows}</div>'
 
 
 def page_contact():

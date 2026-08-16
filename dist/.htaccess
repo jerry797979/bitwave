@@ -1,0 +1,46 @@
+# 지오테스 — 지역 페이지 라우팅
+#
+# /local/ 로 시작하는 주소만 _router.php 가 처리합니다.
+# 나머지(홈·솔루션·가이드 등 정적 HTML)는 건드리지 않습니다.
+#
+# 필요 조건: Apache mod_rewrite 활성화, .htaccess 허용(AllowOverride All)
+# nginx를 쓰신다면 아래 내용을 참고해 location 블록으로 옮기시면 됩니다.
+#     location /local/ { try_files $uri /_router.php; }
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 실제 파일이나 폴더가 있으면 그대로 서빙 (assets, _data 등)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # /local/... 전부를 라우터로
+  RewriteRule ^local(/.*)?$ /_router.php [L,QSA]
+</IfModule>
+
+# 내부 파일 접근 차단 — 데이터와 라우터 소스는 직접 열리지 않게
+<FilesMatch "^_router\.php$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteRule ^_data/ - [F,L]
+</IfModule>
+
+# 기본 문서
+DirectoryIndex index.html index.php
+
+# 캐시 (정적 자원만)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType image/svg+xml "access plus 7 days"
+</IfModule>
+
+# 압축
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/xml
+</IfModule>

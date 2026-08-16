@@ -143,7 +143,7 @@ function page(array $d) {
 <header class="site">
   <div class="wrap">
     <a href="{$pfx}" class="logo">지오<b>테스</b></a>
-    <a href="tel:" . TEL_R . "" class="nav-call">" . TEL . "</a>
+    <a href="tel:{$d['telr']}" class="nav-call">{$d['tel']}</a>
   </div>
 </header>
 
@@ -478,7 +478,13 @@ function not_found($pfx) {
     exit;
 }
 
-if ($seg[0] !== 'local') not_found($pfx);
+// PHP 내장 서버로 확인할 때는 정적 파일을 그대로 넘긴다 (운영에서는 .htaccess가 거른다)
+if (php_sapi_name() === 'cli-server') {
+    $f = __DIR__ . '/' . $path;
+    if ($path !== '' && (is_file($f) || (is_dir($f) && is_file($f . '/index.html')))) return false;
+}
+
+if (!isset($seg[0]) || $seg[0] !== 'local') not_found($pfx);
 
 // 사이트맵
 if (count($seg) === 2 && $seg[1] === 'sitemap.xml') out(sitemap_index(), 'application/xml');

@@ -520,6 +520,31 @@ def page_pricing():
       + faq_block(faq) + FOOTER)
 
 
+# 고객사 로고 — 현 사이트 customers.php 이미지를 그대로 가져옴
+# alt 텍스트를 넣는 이유: 이미지 안의 글자는 검색엔진과 AI가 읽지 못합니다.
+LOGOS = [
+ ("icon1",  "KT olleh"),          ("icon2",  "LG U+"),
+ ("icon3",  "SK네트웍스"),          ("icon4",  "울산광역시 교육연구정보원"),
+ ("icon5",  "문깡 잉글리시스쿨"),     ("icon6",  "YBM시사닷컴"),
+ ("icon7",  "아발론교육"),           ("icon8",  "정철"),
+ ("icon9",  "넥스트네트워크"),        ("icon10", "kt cs"),
+ ("icon11", "스피크케어"),           ("icon12", "이설당"),
+ ("icon13", "바이오인프라"),         ("icon14", "카누다"),
+ ("icon15", "웰컴론"),              ("icon17", "축산물안전관리인증원"),
+ ("icon18", "엠피온"),              ("icon19", "홍국F&B"),
+ ("icon20", "마켓컬리"),            ("icon21", "도움과나눔"),
+]
+
+
+def logo_grid():
+    figs = "".join(
+        f'<figure><img src="/assets/logos/{f}.png" alt="{e(n)}" loading="lazy" decoding="async">'
+        f'<figcaption>{e(n)}</figcaption></figure>' for f, n in LOGOS)
+    names = " · ".join(n for _, n in LOGOS)
+    return (f'<div class="logos">{figs}</div>'
+            f'<p class="note">{e(names)} 외 다수. 로고는 각 사의 상표입니다.</p>')
+
+
 def page_cases():
     body = '''
 <div class="table-scroll">
@@ -533,15 +558,16 @@ def page_cases():
     </tbody>
   </table>
 </div>
-<p class="note">※ 고객사 요청에 따라 사명은 표기하지 않습니다. 위 내용은 실제 사례로 교체 예정입니다.</p>'''
+<p class="note">※ 위 구성 내역은 예시입니다. 실제 사례로 교체 예정입니다.</p>'''
     return (head("구축 사례 | 50개 기업의 컨택센터 | 지오테스",
                  "2006년부터 50개 기업의 컨택센터를 구축했습니다. 업종과 규모, 도입 구성으로 정리했습니다.",
                  f"{SITE}/cases/")
       + header()
       + hero("Cases", "50개 기업이<br>이렇게 쓰고 있습니다",
-             "고객사 요청에 따라 사명은 표기하지 않습니다.<br>대신 업종과 규모, 무엇을 해결했는지를 적었습니다.",
+             "통신사부터 교육, 유통, 공공기관까지.<br>전화가 멈추면 안 되는 곳들과 일해 왔습니다.",
              '<a href="/">홈</a> · 구축사례')
-      + sec("Records", "업종별 구축 내역", body) + FOOTER)
+      + sec("Clients", "이런 곳들과 일했습니다", logo_grid())
+      + sec("Records", "업종별 구축 내역", body, bg=True) + FOOTER)
 
 
 # 연혁 — (연도, 제목, 설명, 강조여부)

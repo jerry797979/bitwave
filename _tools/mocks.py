@@ -50,24 +50,32 @@ def consult():
     body = f'''
     <div class="mock-incoming">
       <span class="ic">{PHONE}</span>
-      <div><b>{pin(1)}010-2847-**** · 김○○ 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
+      <div><b>{pin(1)}010-2847-**** · 김민수 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
       <span class="mk talk" style="margin-left:auto">{pin(4)}통화 중 00:42</span>
     </div>
     <div class="mock-split">
-      <div class="mock-card">
-        <h5>{pin(2)}고객 정보</h5>
-        <div class="mock-row"><span>등급</span><span>정기</span></div>
-        <div class="mock-row"><span>가입일</span><span>2023-04-11</span></div>
-        <div class="mock-row"><span>담당</span><span>2팀 이○○</span></div>
-        <div class="mock-row"><span>누적 상담</span><span>3건</span></div>
-        <div class="mock-row"><span>미처리</span><span>1건</span></div>
+      <div style="display:grid;gap:12px;align-content:start">
+        <div class="mock-card">
+          <h5>{pin(2)}고객 정보</h5>
+          <div class="mock-row"><span>등급</span><span>정기</span></div>
+          <div class="mock-row"><span>가입일</span><span>2023-04-11</span></div>
+          <div class="mock-row"><span>담당</span><span>2팀 이서연</span></div>
+          <div class="mock-row"><span>누적 상담</span><span>3건</span></div>
+          <div class="mock-row"><span>미처리</span><span>1건</span></div>
+        </div>
+        <div class="mock-card">
+          <h5>{pin(5)}진행 중인 건</h5>
+          <div class="mock-row"><span>주문번호</span><span>A-20826</span></div>
+          <div class="mock-row"><span>상태</span><span>배송 중</span></div>
+          <div class="mock-row"><span>도착 예정</span><span>8월 18일</span></div>
+        </div>
       </div>
       <div class="mock-card">
         <h5>{pin(3)}상담 이력</h5>
         <div class="mock-log">
-          <div><b>배송 지연 문의</b><p>도착 예정일 안내, 쿠폰 발송 처리</p><time>2026-08-02 · 박○○</time></div>
-          <div><b>주소 변경 요청</b><p>배송지 수정 완료</p><time>2026-06-18 · 이○○</time></div>
-          <div><b>가입 문의</b><p>요금제 안내</p><time>2023-04-11 · 김○○</time></div>
+          <div><b>배송 지연 문의</b><p>도착 예정일 안내, 쿠폰 발송 처리</p><time>2026-08-02 · 박준영</time></div>
+          <div><b>주소 변경 요청</b><p>배송지 수정 완료</p><time>2026-06-18 · 이서연</time></div>
+          <div><b>가입 문의</b><p>요금제 안내</p><time>2023-04-11 · 김민수</time></div>
         </div>
       </div>
     </div>'''
@@ -83,7 +91,11 @@ def consult():
           "시간순으로 쌓입니다. <b>담당자가 바뀌어도 이어집니다.</b> "
           "고객이 같은 설명을 두 번 하지 않게 만드는 부분이 여기입니다."),
          ("지금 통화가 몇 분째인지",
-          "통화 상태와 경과 시간이 표시됩니다. 통화가 끝나면 이 건이 상담 이력에 자동으로 붙습니다.")],
+          "통화 상태와 경과 시간이 표시됩니다. 통화가 끝나면 이 건이 상담 이력에 자동으로 붙습니다."),
+         ("이 고객의 지금 상황",
+          "주문, 접수, 예약처럼 <b>진행 중인 건을 함께 띄웁니다.</b> "
+          "무엇 때문에 걸었는지 대부분 여기서 짐작이 됩니다. "
+          "쓰시는 업무에 맞춰 이 칸에 무엇을 띄울지 정합니다.")],
         "전화를 받고 나서 성함을 묻고, 검색하고, 지난 내용을 찾습니다. "
         "그 사이 고객은 기다리고, 담당자가 자리에 없으면 아무도 답을 못 합니다.",
         "받는 순간 누구인지, 무슨 일로 걸었을지가 화면에 있습니다. "
@@ -95,10 +107,14 @@ def consult():
 
 def recording():
     rows = [
-        ("08-16 14:22", "수신", "010-2847-****", "이○○", "04:12", "done", "완료"),
-        ("08-16 13:58", "발신", "02-512-****", "박○○", "01:35", "done", "완료"),
+        ("08-16 14:22", "수신", "010-2847-****", "이서연", "04:12", "done", "완료"),
+        ("08-16 14:05", "수신", "010-3388-****", "강나윤", "02:51", "done", "완료"),
+        ("08-16 13:58", "발신", "02-512-****", "박준영", "01:35", "done", "완료"),
         ("08-16 13:40", "수신", "010-9931-****", "—", "00:00", "miss", "부재중"),
-        ("08-16 11:07", "수신", "031-771-****", "김○○", "07:48", "done", "완료"),
+        ("08-16 13:12", "수신", "051-244-****", "정민지", "06:03", "done", "완료"),
+        ("08-16 12:47", "발신", "010-7712-****", "한상우", "03:28", "done", "완료"),
+        ("08-16 11:31", "수신", "010-5502-****", "—", "00:00", "miss", "부재중"),
+        ("08-16 11:07", "수신", "031-771-****", "김민수", "07:48", "done", "완료"),
     ]
     trs = ""
     for n, (d, k, num, a, t, c, s) in enumerate(rows):
@@ -109,6 +125,12 @@ def recording():
         trs += (f'<tr><td>{d}</td><td>{k}</td><td>{num}</td><td>{a}</td><td class="num">{t}</td>'
                 f'<td>{mark}<span class="mk {c}">{s}</span></td><td>{play}</td></tr>')
     body = f'''
+    <div class="mock-sum c4">
+      <div><small>기간 내 통화</small><b>1,284</b><i>최근 7일</i></div>
+      <div><small>부재중</small><b style="color:#a32020">41</b><i>전체의 3.2%</i></div>
+      <div><small>평균 통화</small><b>3:42</b><i>지난주 대비 -8초</i></div>
+      <div><small>보관 중</small><b>18.4GB</b><i>보관 기간 3년</i></div>
+    </div>
     <div class="mock-filter">
       {pin(1)}<span class="on">최근 7일</span><span>상담원 전체</span><span>수신·발신</span>
       <span>통화 상태</span><span>고객번호 검색</span>
@@ -138,11 +160,16 @@ def recording():
 # ---------------------------------------------------------------- 전광판
 
 def dashboard():
-    seats = [("이○○", "talk", "통화중"), ("박○○", "talk", "통화중"), ("김○○", "wait", "대기"),
-             ("정○○", "wait", "대기"), ("최○○", "rest", "휴식"), ("한○○", "talk", "통화중"),
-             ("오○○", "wait", "대기"), ("서○○", "talk", "통화중")]
-    tiles = "".join(f'<div class="mock-seat"><b>{n}</b><span class="mk {c}">{s}</span></div>'
-                    for n, c, s in seats)
+    seats = [("이서연", "talk", "통화중", "02:14"), ("박준영", "talk", "통화중", "00:48"),
+             ("김민수", "wait", "대기", "3분째"),   ("정민지", "wait", "대기", "1분째"),
+             ("최유진", "rest", "휴식", "—"),       ("한상우", "talk", "통화중", "05:32"),
+             ("오지훈", "wait", "대기", "방금"),     ("서예린", "talk", "통화중", "01:07"),
+             ("강나윤", "talk", "통화중", "03:56"), ("윤태호", "rest", "후처리", "00:22"),
+             ("임하늘", "wait", "대기", "2분째"),   ("조은비", "talk", "통화중", "00:19")]
+    cls = {"talk": " busy", "wait": "", "rest": ""}
+    tiles = "".join(
+        f'<div class="mock-seat{cls[c]}"><b>{n}</b><span class="mk {c}">{s}</span><small>{t}</small></div>'
+        for n, c, s, t in seats)
     body = f'''
     <div class="mock-sum">
       <div><small>{pin(1)}대기 중인 전화</small><b style="color:#a32020">2</b></div>
@@ -151,7 +178,7 @@ def dashboard():
       <div><small>오늘 받은 전화</small><b>218</b></div>
       <div><small>{pin(2)}놓친 전화</small><b style="color:#a32020">6</b></div>
     </div>
-    <div style="margin-bottom:9px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">상담원 현황</span></div>
+    <div class="mock-h">{pin(3)}상담원 현황</div>
     <div class="mock-seats">{tiles}</div>'''
     return build(
         "실시간 현황판", "지금 이 순간", body,
@@ -179,13 +206,13 @@ def stats():
     b = "".join(f'<div><i class="{c}" style="height:{h}%"></i><small>{d}</small></div>'
                 for d, h, c in bars)
     body = f'''
-    <div class="mock-sum">
+    <div class="mock-sum c4">
       <div><small>이번 주 통화</small><b>1,284</b></div>
       <div><small>{pin(1)}평균 응답</small><b>8초</b></div>
       <div><small>{pin(2)}첫 통화 종결</small><b>71%</b></div>
       <div><small>놓친 전화</small><b>3.2%</b></div>
     </div>
-    <div style="margin-bottom:4px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">요일별 통화량</span></div>
+    <div class="mock-h">{pin(3)}요일별 통화량</div>
     <div class="mock-bars">{b}</div>'''
     return build(
         "통계", "요일별 통화량", body,
@@ -209,18 +236,18 @@ def stats():
 
 def ai_summary():
     body = f'''
-    <div class="mock-card" style="margin-bottom:12px">
-      <div class="mock-row"><span>{pin(1)}통화</span><span>2026-08-16 14:22 · 4분 12초</span></div>
-      <div class="mock-row"><span>고객</span><span>010-2847-**** 김○○</span></div>
-      <div class="mock-row"><span>상담원</span><span>2팀 이○○</span></div>
+    <div class="mock-meta">
+      <div><small>{pin(1)}통화</small><b>08-16 14:22 · 4분 12초</b></div>
+      <div><small>고객</small><b>010-2847-**** 김민수</b></div>
+      <div><small>상담원</small><b>2팀 이서연</b></div>
     </div>
-    <h5 style="font-size:12px;font-weight:800;color:var(--slate-500);margin-bottom:8px">{pin(2)}요약</h5>
+    <div class="mock-h">{pin(2)}요약</div>
     <div class="mock-quote">
       주문한 상품의 배송이 예정일보다 늦어진 건으로 문의.
       현재 배송 단계와 도착 예정일을 안내하고, 지연에 대한 쿠폰 발송을 약속함.
       고객은 안내 내용에 동의했으며 추가 요청 사항 없음.
     </div>
-    <div style="margin-top:10px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">자동 분류</span></div>
+    <div class="mock-h">{pin(3)}자동 분류</div>
     <div class="mock-tags">
       <span>배송 지연</span><span>도착일 안내</span><span>쿠폰 발송</span><span>처리 완료</span>
     </div>'''
@@ -250,7 +277,7 @@ def ivr_tree():
     <table>
       <thead><tr><th>단계</th><th>{pin(2)}안내 내용</th><th>{pin(3)}누르면</th></tr></thead>
       <tbody>
-        <tr><td class="num">시작</td><td>안녕하세요, ○○입니다. 무엇을 도와드릴까요?</td><td>—</td></tr>
+        <tr><td class="num">시작</td><td>안녕하세요, 한빛유통입니다. 무엇을 도와드릴까요?</td><td>—</td></tr>
         <tr><td class="num">1</td><td>주문·배송 문의</td><td>조회 후 자동 안내</td></tr>
         <tr><td class="num">2</td><td>교환·반품 접수</td><td>접수 후 담당 배정</td></tr>
         <tr><td class="num">3</td><td>영업시간·오시는 길</td><td>안내 후 종료</td></tr>

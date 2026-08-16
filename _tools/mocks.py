@@ -8,24 +8,40 @@
   - 이미지 안의 글자는 검색엔진과 AI가 읽지 못합니다
   - 실제 고객 데이터가 찍힐 위험이 없습니다
 
+각 화면은 세 부분으로 구성합니다.
+  1) 화면        — 번호(pin)를 달아 어디를 보라고 짚어 줍니다
+  2) 번호 설명   — 그 번호가 무슨 뜻인지
+  3) 없을 때/있을 때 — 이 화면이 실제로 무엇을 바꾸는지
+
 스타일은 nova.css의 '화면 예시(mock)' 블록에 있습니다.
 """
 
-CHECK = ('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-         'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>')
 PHONE = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
          'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2'
          'A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11'
          'L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>')
-PLAY = ('<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>')
+PLAY = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
 
 
-def frame(title, right, body, note=None):
+def pin(n):
+    return f'<span class="pin">{n}</span>'
+
+
+def build(title, right, body, legend, before, after, note=None):
+    """화면 + 번호 설명 + 없을 때/있을 때 를 한 덩어리로 만든다."""
+    lg = "".join(
+        f'<li>{pin(i + 1)}<div><b>{t}</b><p>{d}</p></div></li>'
+        for i, (t, d) in enumerate(legend))
     n = f'<p class="mock-note">{note}</p>' if note else ""
     return f'''<div class="mock">
   <div class="mock-bar"><span class="dots"><i></i><i></i><i></i></span><b>{title}</b><span class="right">{right}</span></div>
   <div class="mock-body">{body}</div>
-</div>{n}'''
+</div>{n}
+<ol class="mock-legend">{lg}</ol>
+<div class="mock-vs">
+  <div><h5>이 화면이 없으면</h5><p>{before}</p></div>
+  <div class="on"><h5>있으면</h5><p>{after}</p></div>
+</div>'''
 
 
 # ---------------------------------------------------------------- 상담 화면
@@ -34,12 +50,12 @@ def consult():
     body = f'''
     <div class="mock-incoming">
       <span class="ic">{PHONE}</span>
-      <div><b>010-2847-**** · 김○○ 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
-      <span class="mk talk" style="margin-left:auto">통화 중 00:42</span>
+      <div><b>{pin(1)}010-2847-**** · 김○○ 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
+      <span class="mk talk" style="margin-left:auto">{pin(4)}통화 중 00:42</span>
     </div>
     <div class="mock-split">
       <div class="mock-card">
-        <h5>고객 정보</h5>
+        <h5>{pin(2)}고객 정보</h5>
         <div class="mock-row"><span>등급</span><span>정기</span></div>
         <div class="mock-row"><span>가입일</span><span>2023-04-11</span></div>
         <div class="mock-row"><span>담당</span><span>2팀 이○○</span></div>
@@ -47,7 +63,7 @@ def consult():
         <div class="mock-row"><span>미처리</span><span>1건</span></div>
       </div>
       <div class="mock-card">
-        <h5>상담 이력</h5>
+        <h5>{pin(3)}상담 이력</h5>
         <div class="mock-log">
           <div><b>배송 지연 문의</b><p>도착 예정일 안내, 쿠폰 발송 처리</p><time>2026-08-02 · 박○○</time></div>
           <div><b>주소 변경 요청</b><p>배송지 수정 완료</p><time>2026-06-18 · 이○○</time></div>
@@ -55,8 +71,24 @@ def consult():
         </div>
       </div>
     </div>'''
-    return frame("상담 화면", "전화가 울리는 순간", body,
-                 "화면 예시입니다. 표시 항목은 업무에 맞게 추가하거나 뺄 수 있습니다.")
+    return build(
+        "상담 화면", "전화가 울리는 순간", body,
+        [("전화가 울리면 고객이 먼저 뜹니다",
+          "발신번호로 고객을 찾아 자동으로 띄웁니다. <b>성함부터 여쭤보지 않아도 됩니다.</b> "
+          "등록되지 않은 번호는 신규 고객으로 뜨고, 통화하면서 바로 등록합니다."),
+         ("이 고객이 어떤 고객인지",
+          "등급, 가입일, 담당자, 누적 상담 건수, 처리하지 못한 건이 함께 보입니다. "
+          "말투와 응대 수위를 정하는 데 필요한 정보가 통화 전에 갖춰집니다."),
+         ("지난 통화에서 무슨 이야기를 했는지",
+          "시간순으로 쌓입니다. <b>담당자가 바뀌어도 이어집니다.</b> "
+          "고객이 같은 설명을 두 번 하지 않게 만드는 부분이 여기입니다."),
+         ("지금 통화가 몇 분째인지",
+          "통화 상태와 경과 시간이 표시됩니다. 통화가 끝나면 이 건이 상담 이력에 자동으로 붙습니다.")],
+        "전화를 받고 나서 성함을 묻고, 검색하고, 지난 내용을 찾습니다. "
+        "그 사이 고객은 기다리고, 담당자가 자리에 없으면 아무도 답을 못 합니다.",
+        "받는 순간 누구인지, 무슨 일로 걸었을지가 화면에 있습니다. "
+        "통화 한 건마다 몇십 초씩 줄고, 그게 하루 수백 통이면 사람 한 명 몫이 됩니다.",
+        "화면 예시입니다. 표시 항목은 업무에 맞게 추가하거나 뺄 수 있습니다.")
 
 
 # ---------------------------------------------------------------- 녹취 검색
@@ -68,22 +100,39 @@ def recording():
         ("08-16 13:40", "수신", "010-9931-****", "—", "00:00", "miss", "부재중"),
         ("08-16 11:07", "수신", "031-771-****", "김○○", "07:48", "done", "완료"),
     ]
-    trs = "".join(
-        f'<tr><td>{d}</td><td>{k}</td><td>{n}</td><td>{a}</td><td class="num">{t}</td>'
-        f'<td><span class="mk {c}">{s}</span></td>'
-        f'<td><span class="play">{PLAY}</span></td></tr>'
-        for d, k, n, a, t, c, s in rows)
+    trs = ""
+    for n, (d, k, num, a, t, c, s) in enumerate(rows):
+        mark = pin(2) if c == "miss" else ""
+        play = f'<span class="play">{PLAY}</span>'
+        if n == 0:
+            play = pin(3) + play
+        trs += (f'<tr><td>{d}</td><td>{k}</td><td>{num}</td><td>{a}</td><td class="num">{t}</td>'
+                f'<td>{mark}<span class="mk {c}">{s}</span></td><td>{play}</td></tr>')
     body = f'''
     <div class="mock-filter">
-      <span class="on">최근 7일</span><span>상담원 전체</span><span>수신·발신</span>
+      {pin(1)}<span class="on">최근 7일</span><span>상담원 전체</span><span>수신·발신</span>
       <span>통화 상태</span><span>고객번호 검색</span>
     </div>
     <table>
       <thead><tr><th>일시</th><th>구분</th><th>고객번호</th><th>상담원</th><th>통화시간</th><th>상태</th><th>듣기</th></tr></thead>
       <tbody>{trs}</tbody>
     </table>'''
-    return frame("통화 녹취", "기간·상담원·번호로 검색", body,
-                 "화면 예시입니다. 부재중 통화도 목록에 남아 놓친 전화를 확인할 수 있습니다.")
+    return build(
+        "통화 녹취", "기간·상담원·번호로 검색", body,
+        [("찾는 조건을 걸어 좁힙니다",
+          "기간, 상담원, 수신·발신, 통화 상태, 고객 번호로 걸러냅니다. "
+          "<b>파일 이름을 뒤지지 않아도 됩니다.</b> 녹음보다 검색이 실제로는 더 중요합니다."),
+         ("놓친 전화도 목록에 남습니다",
+          "부재중으로 표시되어 <b>지난달에 몇 통을 놓쳤는지 셀 수 있습니다.</b> "
+          "이 숫자가 있어야 회선을 늘릴지 사람을 늘릴지 정할 수 있습니다."),
+         ("바로 듣습니다",
+          "프로그램을 설치하지 않고 브라우저에서 재생하고 내려받습니다. "
+          "들을 수 있는 범위는 직급과 담당에 따라 나눕니다.")],
+        "녹음은 되는데 그 통화를 찾을 수 없습니다. "
+        "\"언제쯤 통화한 것 같은데\"로 시작해서 결국 포기하게 됩니다.",
+        "조건 몇 개로 그 통화가 나옵니다. "
+        "말로 정한 수량과 단가를 확인할 수 있고, 놓친 전화가 몇 통인지도 숫자로 보입니다.",
+        "화면 예시입니다. 보관 위치는 AWS 클라우드가 기본이며 고객사 서버에 직접 둘 수도 있습니다.")
 
 
 # ---------------------------------------------------------------- 전광판
@@ -96,15 +145,30 @@ def dashboard():
                     for n, c, s in seats)
     body = f'''
     <div class="mock-sum">
-      <div><small>대기 중인 전화</small><b style="color:#a32020">2</b></div>
+      <div><small>{pin(1)}대기 중인 전화</small><b style="color:#a32020">2</b></div>
       <div><small>통화 중</small><b style="color:var(--mint-ink)">4</b></div>
       <div><small>대기 상담원</small><b>3</b></div>
       <div><small>오늘 받은 전화</small><b>218</b></div>
-      <div><small>놓친 전화</small><b style="color:#a32020">6</b></div>
+      <div><small>{pin(2)}놓친 전화</small><b style="color:#a32020">6</b></div>
     </div>
+    <div style="margin-bottom:9px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">상담원 현황</span></div>
     <div class="mock-seats">{tiles}</div>'''
-    return frame("실시간 현황판", "지금 이 순간", body,
-                 "화면 예시입니다. 대기 전화가 쌓이는 순간이 바로 보입니다.")
+    return build(
+        "실시간 현황판", "지금 이 순간", body,
+        [("지금 몇 명이 기다리고 있는지",
+          "대기 전화가 쌓이는 순간이 바로 보입니다. "
+          "<b>이 숫자가 올라가면 그 시간대에 사람이 부족하다는 뜻입니다.</b>"),
+         ("오늘 몇 통을 놓쳤는지",
+          "받은 전화만 세면 잘 돌아가는 것처럼 보입니다. "
+          "놓친 전화를 같이 봐야 실제 상태가 나옵니다."),
+         ("누가 통화 중이고 누가 대기인지",
+          "관리자가 자리를 돌아다니며 확인하지 않아도 됩니다. "
+          "재택으로 일해도 사무실에서 볼 때와 똑같이 보입니다.")],
+        "전화가 밀리는지 아닌지를 감으로 압니다. "
+        "\"오늘 좀 바빴다\" 말고는 남는 기록이 없습니다.",
+        "몇 시에 몇 통이 밀렸는지가 숫자로 남습니다. "
+        "사람을 더 뽑을지, 자동 응대를 넣을지 판단할 근거가 생깁니다.",
+        "화면 예시입니다. 표시 항목과 배치는 조직에 맞게 조정합니다.")
 
 
 # ---------------------------------------------------------------- 통계
@@ -117,44 +181,74 @@ def stats():
     body = f'''
     <div class="mock-sum">
       <div><small>이번 주 통화</small><b>1,284</b></div>
-      <div><small>평균 응답</small><b>8초</b></div>
-      <div><small>첫 통화 종결</small><b>71%</b></div>
+      <div><small>{pin(1)}평균 응답</small><b>8초</b></div>
+      <div><small>{pin(2)}첫 통화 종결</small><b>71%</b></div>
       <div><small>놓친 전화</small><b>3.2%</b></div>
     </div>
+    <div style="margin-bottom:4px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">요일별 통화량</span></div>
     <div class="mock-bars">{b}</div>'''
-    return frame("통계", "요일별 통화량", body,
-                 "화면 예시입니다. 수치는 예시이며 실제 값은 운영 데이터로 채워집니다.")
+    return build(
+        "통계", "요일별 통화량", body,
+        [("전화를 받기까지 몇 초 걸렸는지",
+          "이 숫자가 길어지면 기다리다 끊는 고객이 늘어납니다. "
+          "<b>놓친 전화가 늘기 전에 먼저 나타나는 신호입니다.</b>"),
+         ("한 번에 끝난 통화의 비율",
+          "다시 걸게 만드는 통화가 많으면 같은 일을 두 번 하는 것입니다. "
+          "무엇을 자동 응대로 넘길지 정할 때 이 수치부터 봅니다."),
+         ("언제 사람이 더 필요한지",
+          "요일과 시간대별로 통화가 몰리는 지점이 보입니다. "
+          "인원을 늘리는 대신 그 시간대만 자동 응대를 켜는 방법도 있습니다.")],
+        "전화가 몇 통 왔는지도 정확히 모릅니다. "
+        "무엇을 고쳐야 할지 정할 근거가 없어서 대개 사람을 늘리는 쪽으로 갑니다.",
+        "어느 시간대에 무엇이 몰리는지 나옵니다. "
+        "사람을 늘리지 않고 처리량을 올릴 방법이 보이기 시작합니다.",
+        "화면 예시입니다. 수치는 예시이며 실제 값은 운영 데이터로 채워집니다.")
 
 
 # ---------------------------------------------------------------- AI 통화요약
 
 def ai_summary():
-    body = '''
+    body = f'''
     <div class="mock-card" style="margin-bottom:12px">
-      <div class="mock-row"><span>통화</span><span>2026-08-16 14:22 · 4분 12초</span></div>
+      <div class="mock-row"><span>{pin(1)}통화</span><span>2026-08-16 14:22 · 4분 12초</span></div>
       <div class="mock-row"><span>고객</span><span>010-2847-**** 김○○</span></div>
       <div class="mock-row"><span>상담원</span><span>2팀 이○○</span></div>
     </div>
-    <h5 style="font-size:12px;font-weight:800;color:var(--slate-500);margin-bottom:8px">요약</h5>
+    <h5 style="font-size:12px;font-weight:800;color:var(--slate-500);margin-bottom:8px">{pin(2)}요약</h5>
     <div class="mock-quote">
       주문한 상품의 배송이 예정일보다 늦어진 건으로 문의.
       현재 배송 단계와 도착 예정일을 안내하고, 지연에 대한 쿠폰 발송을 약속함.
       고객은 안내 내용에 동의했으며 추가 요청 사항 없음.
     </div>
+    <div style="margin-top:10px">{pin(3)}<span style="font-size:12px;font-weight:800;color:var(--slate-500)">자동 분류</span></div>
     <div class="mock-tags">
       <span>배송 지연</span><span>도착일 안내</span><span>쿠폰 발송</span><span>처리 완료</span>
     </div>'''
-    return frame("AI 통화요약", "통화가 끝나면 자동으로", body,
-                 "화면 예시입니다. 요약과 분류는 통화가 끝나는 즉시 생성됩니다.")
+    return build(
+        "AI 통화요약", "통화가 끝나면 자동으로", body,
+        [("어떤 통화였는지",
+          "일시, 고객, 상담원, 통화 시간이 함께 남습니다. 녹취 원본도 이 화면에서 바로 듣습니다."),
+         ("4분짜리 통화를 세 줄로",
+          "녹취를 글로 풀고 요점만 정리합니다. "
+          "<b>처음부터 다시 듣지 않아도 무슨 통화였는지 알 수 있습니다.</b> "
+          "상담원이 통화 후 기록을 입력하던 시간이 없어집니다."),
+         ("문의 유형이 자동으로 붙습니다",
+          "어떤 문의가 몰리는지 자동으로 분류됩니다. "
+          "이 분류가 쌓이면 무엇부터 자동 응대로 넘길지 정할 수 있습니다.")],
+        "통화가 끝나면 상담원이 내용을 입력합니다. "
+        "바쁘면 대충 쓰거나 아예 못 쓰고, 나중에는 녹취를 처음부터 다시 듣게 됩니다.",
+        "통화가 끝나는 즉시 정리됩니다. "
+        "상담원은 다음 전화를 받고, 관리자는 요약만 훑어도 흐름을 파악합니다.",
+        "화면 예시입니다. 요약과 분류는 통화가 끝나는 즉시 생성됩니다.")
 
 
 # ---------------------------------------------------------------- ARS 시나리오
 
 def ivr_tree():
-    body = '''
-    <div class="mock-filter"><span class="on">평일 09:00–18:00</span><span>점심시간</span><span>야간·주말</span><span>공휴일</span></div>
+    body = f'''
+    <div class="mock-filter">{pin(1)}<span class="on">평일 09:00–18:00</span><span>점심시간</span><span>야간·주말</span><span>공휴일</span></div>
     <table>
-      <thead><tr><th>단계</th><th>안내 내용</th><th>누르면</th></tr></thead>
+      <thead><tr><th>단계</th><th>{pin(2)}안내 내용</th><th>{pin(3)}누르면</th></tr></thead>
       <tbody>
         <tr><td class="num">시작</td><td>안녕하세요, ○○입니다. 무엇을 도와드릴까요?</td><td>—</td></tr>
         <tr><td class="num">1</td><td>주문·배송 문의</td><td>조회 후 자동 안내</td></tr>
@@ -163,8 +257,22 @@ def ivr_tree():
         <tr><td class="num">0</td><td>상담원 연결</td><td>대기열 배정</td></tr>
       </tbody>
     </table>'''
-    return frame("ARS 시나리오", "시간대별로 다르게", body,
-                 "화면 예시입니다. 안내 문구는 관리자 화면에서 직접 수정하면 음성으로 만들어 적용됩니다.")
+    return build(
+        "ARS 시나리오", "시간대별로 다르게", body,
+        [("시간대마다 다른 안내가 나갑니다",
+          "업무시간, 점심시간, 야간·주말, 공휴일에 각각 다른 안내를 걸어둡니다. "
+          "<b>명절이나 임시 휴무는 날짜를 지정해 그날만 바꿉니다.</b>"),
+         ("안내 문구는 직접 고칩니다",
+          "관리자 화면에서 글로 입력하면 음성으로 만들어 적용됩니다. "
+          "문구 하나 바꾸려고 성우 녹음을 다시 하거나 업체에 요청할 일이 없습니다."),
+         ("누르면 무엇이 일어나는지",
+          "안내만 하고 끝낼지, 조회해서 답할지, 담당자에게 넘길지를 단계마다 정합니다. "
+          "여기서 <b>사람에게 갈 전화와 가지 않을 전화가 갈립니다.</b>")],
+        "안내 음성을 바꾸려면 업체에 요청하고 며칠을 기다립니다. "
+        "그래서 대부분 몇 년 전 문구를 그대로 씁니다.",
+        "필요할 때 바로 바꿉니다. "
+        "답이 정해진 문의를 앞단에서 걸러내면 상담원에게 가는 전화 자체가 줄어듭니다.",
+        "화면 예시입니다. 단계 수에는 제한이 없습니다.")
 
 
 ALL = {

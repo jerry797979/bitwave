@@ -129,12 +129,12 @@
   <div class="mock-body">
     <div class="mock-incoming">
       <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-      <div><b>010-2847-**** · 김○○ 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
-      <span class="mk talk" style="margin-left:auto">통화 중 00:42</span>
+      <div><b><span class="pin">1</span>010-2847-**** · 김○○ 님</b><small>세 번째 통화 · 마지막 상담 2026-08-02</small></div>
+      <span class="mk talk" style="margin-left:auto"><span class="pin">4</span>통화 중 00:42</span>
     </div>
     <div class="mock-split">
       <div class="mock-card">
-        <h5>고객 정보</h5>
+        <h5><span class="pin">2</span>고객 정보</h5>
         <div class="mock-row"><span>등급</span><span>정기</span></div>
         <div class="mock-row"><span>가입일</span><span>2023-04-11</span></div>
         <div class="mock-row"><span>담당</span><span>2팀 이○○</span></div>
@@ -142,7 +142,7 @@
         <div class="mock-row"><span>미처리</span><span>1건</span></div>
       </div>
       <div class="mock-card">
-        <h5>상담 이력</h5>
+        <h5><span class="pin">3</span>상담 이력</h5>
         <div class="mock-log">
           <div><b>배송 지연 문의</b><p>도착 예정일 안내, 쿠폰 발송 처리</p><time>2026-08-02 · 박○○</time></div>
           <div><b>주소 변경 요청</b><p>배송지 수정 완료</p><time>2026-06-18 · 이○○</time></div>
@@ -150,7 +150,12 @@
         </div>
       </div>
     </div></div>
-</div><p class="mock-note">화면 예시입니다. 표시 항목은 업무에 맞게 추가하거나 뺄 수 있습니다.</p></div>
+</div><p class="mock-note">화면 예시입니다. 표시 항목은 업무에 맞게 추가하거나 뺄 수 있습니다.</p>
+<ol class="mock-legend"><li><span class="pin">1</span><div><b>전화가 울리면 고객이 먼저 뜹니다</b><p>발신번호로 고객을 찾아 자동으로 띄웁니다. <b>성함부터 여쭤보지 않아도 됩니다.</b> 등록되지 않은 번호는 신규 고객으로 뜨고, 통화하면서 바로 등록합니다.</p></div></li><li><span class="pin">2</span><div><b>이 고객이 어떤 고객인지</b><p>등급, 가입일, 담당자, 누적 상담 건수, 처리하지 못한 건이 함께 보입니다. 말투와 응대 수위를 정하는 데 필요한 정보가 통화 전에 갖춰집니다.</p></div></li><li><span class="pin">3</span><div><b>지난 통화에서 무슨 이야기를 했는지</b><p>시간순으로 쌓입니다. <b>담당자가 바뀌어도 이어집니다.</b> 고객이 같은 설명을 두 번 하지 않게 만드는 부분이 여기입니다.</p></div></li><li><span class="pin">4</span><div><b>지금 통화가 몇 분째인지</b><p>통화 상태와 경과 시간이 표시됩니다. 통화가 끝나면 이 건이 상담 이력에 자동으로 붙습니다.</p></div></li></ol>
+<div class="mock-vs">
+  <div><h5>이 화면이 없으면</h5><p>전화를 받고 나서 성함을 묻고, 검색하고, 지난 내용을 찾습니다. 그 사이 고객은 기다리고, 담당자가 자리에 없으면 아무도 답을 못 합니다.</p></div>
+  <div class="on"><h5>있으면</h5><p>받는 순간 누구인지, 무슨 일로 걸었을지가 화면에 있습니다. 통화 한 건마다 몇십 초씩 줄고, 그게 하루 수백 통이면 사람 한 명 몫이 됩니다.</p></div>
+</div></div>
   </div>
 </section>
 <section>

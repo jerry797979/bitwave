@@ -150,7 +150,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdro
 .svc-list{list-style:none;margin-top:16px;display:grid;gap:11px}
 .svc-list li{position:relative;padding-left:27px;font-size:14.5px;color:var(--slate-600)}
 .svc-list li::before{content:"";position:absolute;left:2px;top:6px;width:14px;height:8px;border-left:2.5px solid var(--brand);border-bottom:2.5px solid var(--brand);transform:rotate(-45deg)}
-@media(max-width:900px){.cards3{grid-template-columns:1fr 1fr}}
+/* 마지막 줄에 한 장만 남으면 가로로 채운다 (홀수 개수 대비) */
+.cards3>.card:last-child:nth-child(3n+1){grid-column:span 3}
+.cards2>.card:last-child:nth-child(2n+1){grid-column:span 2}
+@media(max-width:900px){
+  .cards3{grid-template-columns:1fr 1fr}
+  .cards3>.card:last-child:nth-child(3n+1){grid-column:auto}
+  .cards3>.card:last-child:nth-child(2n+1){grid-column:span 2}
+}
 @media(max-width:640px){.cards2,.cards3{grid-template-columns:1fr}}
 
 /* ---------- 표 ---------- */

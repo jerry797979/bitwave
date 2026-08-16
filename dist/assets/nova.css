@@ -201,6 +201,85 @@ table.t tr:last-child td,table.t tr:last-child th{border-bottom:none}
 .step p{font-size:14px;color:var(--slate-500);margin-top:5px;line-height:1.6}
 .step p b{color:var(--slate-700)}
 
+/* ==========================================================================
+   화면 예시 (mock)
+   실제 관리자 화면을 HTML로 그린 것. 캡처 이미지가 아니라서
+   기능이 바뀌면 이 자리에서 문구만 고치면 됩니다.
+   ========================================================================== */
+.mock{background:#fff;border:1px solid var(--slate-200);border-radius:16px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(17,12,31,.3);font-size:13px}
+.mock-bar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--ink);color:#fff}
+.mock-bar .dots{display:flex;gap:5px}
+.mock-bar .dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25)}
+.mock-bar b{font-size:12.5px;font-weight:700;letter-spacing:-.01em}
+.mock-bar .right{margin-left:auto;font-size:11.5px;color:#94a3b8}
+.mock-body{padding:16px}
+.mock-note{font-size:12.5px;color:var(--slate-400);text-align:center;margin-top:12px}
+
+/* 상단 필터 줄 */
+.mock-filter{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+.mock-filter span{border:1px solid var(--slate-200);border-radius:8px;padding:6px 11px;color:var(--slate-500);font-size:12px;background:var(--slate-50)}
+.mock-filter span.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+
+/* 표 */
+.mock table{width:100%;border-collapse:collapse;font-size:12.5px}
+.mock th,.mock td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--slate-100);white-space:nowrap}
+.mock thead th{background:var(--slate-50);color:var(--slate-500);font-weight:700;font-size:11.5px}
+.mock tbody tr:last-child td{border-bottom:none}
+.mock td.num{font-family:var(--display);font-weight:700}
+.mock .play{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(109,74,255,.1);color:var(--brand)}
+
+/* 상태 배지 */
+.mk{display:inline-block;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800}
+.mk.wait{background:rgba(255,213,62,.25);color:#7a5a00}
+.mk.talk{background:rgba(53,224,161,.22);color:var(--mint-ink)}
+.mk.rest{background:var(--slate-100);color:var(--slate-500)}
+.mk.miss{background:rgba(214,58,58,.12);color:#a32020}
+.mk.done{background:rgba(109,74,255,.12);color:var(--brand)}
+
+/* 상담 화면 2단 */
+.mock-split{display:grid;grid-template-columns:230px 1fr;gap:14px}
+.mock-card{border:1px solid var(--slate-200);border-radius:11px;padding:13px}
+.mock-card h5{font-size:12px;font-weight:800;color:var(--slate-500);margin-bottom:9px;letter-spacing:.02em}
+.mock-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:12.5px}
+.mock-row span:first-child{color:var(--slate-400)}
+.mock-row span:last-child{font-weight:700;text-align:right}
+.mock-incoming{display:flex;align-items:center;gap:11px;background:rgba(109,74,255,.07);border:1px solid rgba(109,74,255,.25);border-radius:11px;padding:11px 13px;margin-bottom:13px}
+.mock-incoming .ic{width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+.mock-incoming b{font-size:14px;display:block}
+.mock-incoming small{color:var(--slate-500);font-size:11.5px}
+.mock-log{display:grid;gap:8px}
+.mock-log div{border-left:2px solid var(--slate-200);padding:2px 0 2px 11px}
+.mock-log b{font-size:12.5px}
+.mock-log p{color:var(--slate-500);font-size:12px;margin-top:2px}
+.mock-log time{color:var(--slate-400);font-size:11px}
+
+/* 전광판 */
+.mock-seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.mock-seat{border:1px solid var(--slate-200);border-radius:10px;padding:9px;text-align:center}
+.mock-seat b{display:block;font-size:12.5px;margin-bottom:5px}
+.mock-sum{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px}
+.mock-sum div{flex:1 1 90px;border:1px solid var(--slate-200);border-radius:10px;padding:9px 11px}
+.mock-sum small{display:block;color:var(--slate-400);font-size:11px}
+.mock-sum b{font-family:var(--display);font-size:19px;font-weight:800}
+
+/* 통계 막대 */
+.mock-bars{display:flex;align-items:flex-end;gap:9px;height:112px;padding-top:8px}
+.mock-bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%}
+.mock-bars i{width:100%;background:var(--brand);border-radius:5px 5px 0 0;display:block}
+.mock-bars i.alt{background:rgba(109,74,255,.28)}
+.mock-bars small{color:var(--slate-400);font-size:10.5px}
+
+/* AI 요약 */
+.mock-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.mock-tags span{background:rgba(53,224,161,.16);color:var(--mint-ink);border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:700}
+.mock-quote{background:var(--slate-50);border-radius:9px;padding:11px 13px;font-size:12.5px;color:var(--slate-600);line-height:1.7}
+
+@media(max-width:720px){
+  .mock-split{grid-template-columns:1fr}
+  .mock{font-size:12px}
+  .mock th,.mock td{padding:8px}
+}
+
 /* ---------- FAQ 아코디언 ---------- */
 .faq{display:grid;gap:12px;max-width:760px;margin:0 auto}
 .faq details{background:#fff;border:1px solid var(--slate-200);border-radius:18px;box-shadow:0 4px 14px rgba(17,12,31,.04);overflow:hidden;transition:border-color .16s,box-shadow .16s}

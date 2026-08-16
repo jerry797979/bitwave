@@ -7,7 +7,10 @@
 내용 수정은 아래 PAGES 데이터만 고치면 됨. 템플릿은 건드릴 일 없음.
 TODO 표시는 사장님 확인 후 확정할 항목.
 """
-import os, html
+import os, sys, html
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import mocks
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "dist", "solution")
@@ -20,6 +23,7 @@ TEL_RAW = "15555528"
 
 PAGES = [
 {
+ "mock": "ai_summary",
  "slug": "aicc", "nav": "AI 컨택센터", "eyebrow": "AICC",
  "title": "AI 컨택센터(AICC) 구축 | 통화요약·AI 응대·보이는 ARS | 지오테스",
  "desc": "쓰던 콜센터를 걷어내지 않고 AI만 얹습니다. AI 통화요약(STT), AI 응대, 보이는 ARS. 교환기를 직접 만드는 회사가 구축합니다.",
@@ -49,6 +53,7 @@ PAGES = [
  ],
 },
 {
+ "mock": "dashboard",
  "slug": "ipcc", "nav": "콜센터 솔루션", "eyebrow": "IPCC · CTI",
  "title": "콜센터 솔루션 구축 | IP 교환기·호분배·CTI | 지오테스",
  "desc": "IP 교환기, 호분배(ACD), 상담원 화면, 통계를 하나의 시스템으로 제공합니다. 자체 개발이라 화면과 흐름을 요청대로 수정합니다.",
@@ -78,6 +83,7 @@ PAGES = [
  ],
 },
 {
+ "mock": "consult",
  "slug": "crm", "nav": "고객관리 CRM", "eyebrow": "CRM",
  "title": "상담 CRM 고객관리 프로그램 | 스크린 팝업·상담이력 | 지오테스",
  "desc": "전화가 울리면 고객 정보가 뜨는 상담 전용 CRM. 항목을 업무에 맞게 수정하고, 클릭 한 번으로 발신합니다.",
@@ -107,6 +113,7 @@ PAGES = [
  ],
 },
 {
+ "mock": "ivr_tree",
  "slug": "ivr", "nav": "ARS·IVR", "eyebrow": "ARS · IVR",
  "title": "ARS·IVR 자동응답 시스템 구축 | 다단계 시나리오·콜백 | 지오테스",
  "desc": "사람이 받지 않아도 되는 전화를 걸러냅니다. 다단계 시나리오, 시간·요일별 분기, 콜백, TTS 음원 편집.",
@@ -136,6 +143,7 @@ PAGES = [
  ],
 },
 {
+ "mock": "recording",
  "slug": "recording", "nav": "통화 녹취", "eyebrow": "Recording",
  "title": "통화 녹취 시스템 | 전수 녹취·조건 검색·권한 관리 | 지오테스",
  "desc": "모든 통화를 남기고 필요한 것만 찾습니다. 기간·상담원·고객번호·통화상태별 검색, 웹에서 바로 재생.",
@@ -331,6 +339,7 @@ def header(active=""):
       </div>
       <a href="/use-cases/">활용사례</a>
       <a href="/industries/">업종별</a>
+      <a href="/demo/">화면 예시</a>
       <a href="/pricing/">요금</a>
       <a href="/cases/">구축사례</a>
       <a href="/about/">회사소개</a>
@@ -353,7 +362,7 @@ def header(active=""):
       <button class="pm-x" type="button" aria-label="메뉴 닫기" onclick="document.getElementById('drawer').classList.remove('open')">&times;</button>
     </div>
     <div class="dgroup"><b>솔루션</b>{links}</div>
-    <div class="dgroup"><b>도입</b><a href="/use-cases/">활용사례</a><a href="/industries/">업종별</a><a href="/pricing/">요금</a><a href="/cases/">구축사례</a></div>
+    <div class="dgroup"><b>도입</b><a href="/use-cases/">활용사례</a><a href="/industries/">업종별</a><a href="/demo/">화면 예시</a><a href="/pricing/">요금</a><a href="/cases/">구축사례</a></div>
     <div class="dgroup"><b>회사</b><a href="/about/">회사소개</a><a href="/contact/">상담 문의</a></div>
   </div>
 </div>'''
@@ -409,6 +418,21 @@ jstr = lambda s: '"%s"' % str(s).replace('\\', '\\\\').replace('"', '\\"')
 
 def render(p):
     others = [x for x in PAGES if x["slug"] != p["slug"]][:4]
+
+    mock_sec = ""
+    if p.get("mock"):
+        mtitle, mlead, mfn = mocks.ALL[p["mock"]]
+        mock_sec = f'''
+<section style="background:var(--slate-50)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Screen</span>
+      <h2 class="h">{mtitle}</h2>
+      <p class="lead-txt">{mlead}</p>
+    </div>
+    <div style="max-width:820px;margin:0 auto">{mfn()}</div>
+  </div>
+</section>'''
 
     feats = "".join(f'''
       <div class="card">
@@ -467,8 +491,8 @@ def render(p):
     </div>
   </div>
 </section>
-
-<section style="background:var(--slate-50)">
+{mock_sec}
+<section>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Fit</span>

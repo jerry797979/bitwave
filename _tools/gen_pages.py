@@ -611,6 +611,45 @@ def hist_html():
     return f'<div class="hist">{rows}</div>'
 
 
+def page_demo():
+    import mocks
+    order = ["consult", "recording", "dashboard", "ai_summary", "ivr_tree", "stats"]
+    blocks = ""
+    for n, key in enumerate(order):
+        title, lead, fn = mocks.ALL[key]
+        bg = ' style="background:var(--slate-50)"' if n % 2 else ""
+        blocks += f'''
+<section{bg}>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Screen {n + 1:02d}</span>
+      <h2 class="h">{title}</h2>
+      <p class="lead-txt">{lead}</p>
+    </div>
+    <div style="max-width:820px;margin:0 auto">{fn()}</div>
+  </div>
+</section>'''
+
+    faq = [("실제 화면과 같은가요?",
+            "구성과 흐름은 같습니다. 표시 항목과 명칭은 업무에 맞게 바꾸기 때문에 도입하시면 회사에 맞는 형태로 나옵니다."),
+           ("직접 써 볼 수 있나요?",
+            "상담 시 실제 화면으로 시연해 드립니다. 쓰시는 업무를 알려주시면 그 상황으로 보여드립니다."),
+           ("화면을 우리 업무에 맞게 바꿀 수 있나요?",
+            "저희가 직접 개발한 시스템이라 항목과 배치, 업무 흐름을 요청대로 수정합니다."),
+           ("모바일에서도 같은 화면인가요?",
+            "웹 기반이라 사무실 밖에서도 같은 기능을 씁니다. 화면은 기기 크기에 맞춰 배치가 달라집니다.")]
+
+    return (head("화면 예시 | 상담화면·녹취·현황판·AI요약 | 지오테스",
+                 "지오테스 관리자 화면이 실제로 어떻게 생겼는지 보여드립니다. 상담 화면, 통화 녹취, 실시간 현황판, AI 통화요약, ARS 시나리오, 통계.",
+                 f"{SITE}/demo/", faq)
+      + header()
+      + hero("Screens", "말로 설명하는 것보다<br>보시는 편이 빠릅니다",
+             "관리자 화면이 실제로 어떻게 생겼는지 정리했습니다.<br>계정 없이 이 페이지에서 바로 보실 수 있습니다.",
+             '<a href="/">홈</a> · 화면 예시')
+      + blocks
+      + faq_block(faq) + FOOTER)
+
+
 def page_contact():
     form = '''
 <div class="lead-wrap">
@@ -681,12 +720,13 @@ def main():
         others = [o for o in INDUSTRIES if o["slug"] != i["slug"]][:4]
         write(os.path.join(DIST, "industries", i["slug"], "index.html"), render_industry(i, others), 2)
 
+    write(os.path.join(DIST, "demo", "index.html"), page_demo(), 1)
     write(os.path.join(DIST, "pricing", "index.html"), page_pricing(), 1)
     write(os.path.join(DIST, "cases", "index.html"), page_cases(), 1)
     write(os.path.join(DIST, "about", "index.html"), page_about(), 1)
     write(os.path.join(DIST, "contact", "index.html"), page_contact(), 1)
 
-    total = 2 + len(USE_CASES) + len(INDUSTRIES) + 4
+    total = 2 + len(USE_CASES) + len(INDUSTRIES) + 5
     print(f"\n총 {total}개 생성 완료")
 
 

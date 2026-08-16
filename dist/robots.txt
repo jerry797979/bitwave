@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bitwave.kr/sitemap.xml
+Sitemap: https://ziotes.com/sitemap.xml

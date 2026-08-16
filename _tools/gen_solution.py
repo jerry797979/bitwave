@@ -12,7 +12,7 @@ import os, html
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "dist", "solution")
 
-SITE = "https://bitwave.kr"
+SITE = "https://ziotes.com"
 TEL = "1555-5528"
 TEL_RAW = "15555528"
 

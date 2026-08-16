@@ -4,7 +4,7 @@ import os, datetime
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 DIST = os.path.join(ROOT, "dist")
-SITE = "https://bitwave.kr"
+SITE = "https://ziotes.com"
 
 PRIORITY = {"": "1.0", "solution": "0.9", "use-cases": "0.8",
             "industries": "0.8", "pricing": "0.7", "contact": "0.7"}

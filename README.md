@@ -39,6 +39,48 @@ http://localhost:8791
 
 ---
 
+## 지역 페이지 5만 장 (PHP)
+
+`dist/_router.php` 파일 하나가 **53,238개 지역 페이지**를 만들어 냅니다.
+HTML을 미리 뽑아 두지 않기 때문에 문구를 한 줄 고치면 5만 장에 바로 반영됩니다.
+
+```
+/local/                                   전국 허브             1
+/local/{시도}/                             시도 허브            17
+/local/{시도}/{시군구}/                     시군구 허브         229
+/local/{시도}/{시군구}/{업종}/               시군구 × 업종     7,557
+/local/{시도}/{시군구}/{읍면동}/             읍면동 허브       3,495
+/local/{시도}/{시군구}/{읍면동}/{서비스}/     읍면동 × 서비스  41,940
+/local/sitemap.xml                        사이트맵 목록
+/local/sitemap-{시도}.xml                  시도별 사이트맵
+```
+
+**필요 환경** — PHP 7.4 이상, Apache mod_rewrite (`dist/.htaccess` 참고)
+nginx면 `location /local/ { try_files $uri /_router.php; }` 한 줄이면 됩니다.
+
+**로컬에서 확인**
+
+```bash
+php -S 127.0.0.1:8792 -t dist dist/_router.php
+```
+
+http://127.0.0.1:8792/local/seoul/gangnam/hospital/
+
+**데이터**
+
+| 파일 | 내용 |
+|---|---|
+| `_data/regions-index.json` | 시도·시군구 목록 (9KB, 매 요청 로드) |
+| `_data/regions/{시도}.json` | 읍면동 포함 상세 (필요할 때만 로드) |
+| `_data/topics.json` | 업종 33 · 서비스 12 |
+
+지역 데이터는 `node _tools/extract_regions.mjs`, 주제는 `python _tools/gen_topics.py`로 다시 만듭니다.
+
+> ⚠️ **GitHub Pages에서는 `/local/` 페이지가 뜨지 않습니다.** PHP를 실행하지 못하기 때문입니다.
+> 미리보기에서는 정적 페이지 42장만 보입니다. 지역 페이지는 PHP가 되는 서버에 올려야 동작합니다.
+
+---
+
 ## 배포
 
 `dist/` 폴더를 그대로 올리면 됩니다.

@@ -31,17 +31,33 @@ const TEL_R = '15555528';
 
 // ---------------------------------------------------------------- 데이터
 
-$REG = json_decode(file_get_contents(__DIR__ . '/_data/regions.json'), true);
+// 통짜 파일(150KB)을 매 요청마다 읽지 않습니다.
+// 목록은 얇은 색인에서, 읍면동까지 필요한 경우에만 해당 시도 파일을 읽습니다.
+$IDX = json_decode(file_get_contents(__DIR__ . '/_data/regions-index.json'), true);
 $TOP = json_decode(file_get_contents(__DIR__ . '/_data/topics.json'), true);
 
-$PROV = [];      // 시도슬러그 => 시도
-$CITY = [];      // "시도/시군구" => 시군구
-foreach ($REG['provinces'] as $p) {
-    $PROV[$p['slug']] = $p;
-    foreach ($p['cities'] as $c) $CITY[$p['slug'] . '/' . $c['slug']] = $c;
-}
+$PROV = [];      // 시도슬러그 => 시도(시군구 이름까지만)
+foreach ($IDX['provinces'] as $p) $PROV[$p['slug']] = $p;
+
 $IND = [];  foreach ($TOP['industries'] as $t) $IND[$t['slug']] = $t;
 $SVC = [];  foreach ($TOP['services']   as $t) $SVC[$t['slug']] = $t;
+
+/** 해당 시도의 전체 데이터(읍면동 포함)를 읽는다. 한 번 읽으면 재사용한다. */
+function prov_full(string $slug) {
+    static $cache = [];
+    if (isset($cache[$slug])) return $cache[$slug];
+    $f = __DIR__ . '/_data/regions/' . $slug . '.json';
+    if (!is_file($f)) return null;
+    return $cache[$slug] = json_decode(file_get_contents($f), true);
+}
+
+/** 시군구 하나를 읍면동까지 포함해 가져온다. */
+function city_full(string $pslug, string $cslug) {
+    $p = prov_full($pslug);
+    if (!$p) return null;
+    foreach ($p['cities'] as $c) if ($c['slug'] === $cslug) return $c;
+    return null;
+}
 
 // ---------------------------------------------------------------- 도구
 
@@ -320,13 +336,42 @@ function page_dong_service($prov, $city, $dong, $svc, $pfx) {
 
 /** 읍면동 허브 */
 function page_dong_hub($prov, $city, $dong, $pfx) {
-    global $SVC;
-    $links = [];
-    foreach ($SVC as $s) $links[] = [$pfx . 'local/' . $prov['slug'] . '/' . $city['slug'] . '/' . $dong['slug'] . '/' . $s['slug'] . '/', $dong['ko'] . ' ' . $s['ko']];
+    global $SVC, $IND;
+    $seed = $dong['slug'];
+    $base = $pfx . 'local/' . $prov['slug'] . '/' . $city['slug'] . '/';
 
-    $body = '<h2>' . esc($dong['ko']) . '에서 문의하실 수 있는 항목</h2>' . link_grid($links)
-          . '<p>' . esc($city['ko'] . ' ' . $dong['ko']) . ' 지역에서 전화 시스템을 알아보신다면 위 항목 중에서 고르시면 됩니다. '
-          . '무엇이 필요한지 모르시겠다면 지금 쓰시는 환경만 알려주셔도 됩니다.</p>';
+    $links = [];
+    foreach ($SVC as $s) $links[] = [$base . $dong['slug'] . '/' . $s['slug'] . '/', $dong['ko'] . ' ' . $s['ko']];
+
+    $ilinks = [];
+    foreach (around(array_values($IND), $seed, 8) as $t) $ilinks[] = [$base . $t['slug'] . '/', $city['ko'] . ' ' . $t['ko']];
+
+    $nlinks = [];
+    foreach (around($city['dongs'], $seed, 8, $dong['slug']) as $d) $nlinks[] = [$base . $d['slug'] . '/', $d['ko']];
+
+    $body = '<h2>' . esc($dong['ko']) . '에서 문의하실 수 있는 항목</h2>'
+          . '<p>' . esc($city['ko'] . ' ' . $dong['ko']) . ' 지역에서 전화 시스템을 알아보신다면 아래 항목 중에서 고르시면 됩니다. '
+          . '무엇이 필요한지 모르시겠다면 지금 쓰시는 환경만 알려주셔도 됩니다. '
+          . '전화를 몇 분이 받고 계신지, 무엇이 불편하신지만 들으면 나머지는 저희가 정리해 드립니다.</p>'
+          . link_grid($links)
+
+          . '<h2>공사 없이 시작합니다</h2>'
+          . '<p>인터넷전화 방식이라 <strong>회선을 늘리는 데 공사가 필요 없습니다.</strong> '
+          . '자리가 하나 늘어도, 사무실을 옮겨도 번호는 그대로 씁니다. '
+          . '지점이 여러 곳이면 하나의 내선 체계로 묶어 지점 사이 통화료를 없앨 수 있습니다. '
+          . '설치는 원격으로 진행하는 부분이 많아 ' . esc($dong['ko']) . '까지 여러 번 방문하지 않아도 됩니다.</p>'
+          . '<div class="callout"><p>지오테스는 인터넷전화 회선과 교환기, 상담 프로그램을 직접 개발해 공급합니다. '
+          . '회선과 시스템을 한 곳에서 계약하기 때문에 전화가 안 될 때 연락할 곳이 한 곳입니다. '
+          . '통신사와 장비사가 서로 미루는 일이 생기지 않습니다.</p></div>'
+
+          . '<h2>' . esc($city['ko']) . '에서 많이 찾는 업종</h2>'
+          . '<p>업종마다 전화로 들어오는 내용이 다릅니다. '
+          . '그 업종에서 반복해서 나온 요구를 기본 구성으로 잡아두고 시작합니다.</p>'
+          . link_grid($ilinks)
+
+          . '<h2>' . esc($city['ko']) . '의 다른 지역</h2>'
+          . link_grid($nlinks)
+          . '<p>' . esc(pick(CLOSE, $seed)) . '</p>';
 
     return render([
         'pfx' => $pfx,
@@ -340,7 +385,12 @@ function page_dong_hub($prov, $city, $dong, $pfx) {
         'aq' => $dong['ko'] . '에서도 구축이 되나요?',
         'answer' => '됩니다. 인터넷전화 기반이라 <span class="hl">인터넷 회선만 있으면 지역과 관계없이 구축</span>할 수 있습니다. '
                   . '회선 공사가 필요 없고, 자리를 늘릴 때도 공사 없이 추가합니다.',
-        'faq' => [],
+        'faq' => [
+            [$dong['ko'] . '까지 방문해 주시나요?', '필요하시면 방문합니다. 다만 설치와 설정은 원격으로 되는 부분이 많아 여러 번 오가지 않아도 됩니다.'],
+            ['몇 명부터 쓸 수 있나요?', '정해진 최소 인원은 없습니다. 두세 명이 전화를 나눠 받는 곳도 구축합니다.'],
+            ['쓰던 번호를 그대로 쓸 수 있나요?', '번호 이전으로 유지할 수 있습니다. 안내문과 명함을 다시 만들지 않아도 됩니다.'],
+            ['얼마나 걸리나요?', '규모와 구성에 따라 다릅니다. 현황을 본 뒤 일정을 알려드립니다.'],
+        ],
         'body' => $body,
     ]);
 }
@@ -353,8 +403,21 @@ function page_city_hub($prov, $city, $pfx) {
     $dlinks = [];
     foreach ($city['dongs'] as $d) $dlinks[] = [$pfx . 'local/' . $prov['slug'] . '/' . $city['slug'] . '/' . $d['slug'] . '/', $d['ko']];
 
-    $body = '<h2>업종별 안내</h2>' . link_grid($ilinks);
-    if ($dlinks) $body .= '<h2>' . esc($city['ko']) . ' 지역</h2>' . link_grid($dlinks);
+    $body = '<h2>' . esc($city['ko']) . '에서 콜센터를 알아보신다면</h2>'
+          . '<p>전화가 몇 통 오는지, 그중 몇 통을 놓치고 있는지부터 확인하는 편이 좋습니다. '
+          . '규모를 먼저 정하고 시스템을 고르면 대개 안 쓰는 기능까지 사게 됩니다. '
+          . '지금 불편한 지점을 기준으로 필요한 것만 담는 편이 총액이 낮습니다.</p>'
+          . '<div class="callout"><p>지오테스는 인터넷전화 회선과 교환기, 상담 프로그램을 직접 개발해 공급합니다. '
+          . '회선은 통신사에서, 장비는 장비사에서 따로 사실 필요가 없습니다. '
+          . '전화가 안 될 때 연락할 곳도 한 곳입니다.</p></div>'
+          . '<h2>업종별 안내</h2>'
+          . '<p>업종마다 전화로 들어오는 내용이 다릅니다. 아래에서 해당 업종을 고르시면 '
+          . '그 업종에서 반복해서 나온 요구와 기본 구성을 보실 수 있습니다.</p>'
+          . link_grid($ilinks);
+    if ($dlinks) $body .= '<h2>' . esc($city['ko']) . ' 지역</h2>'
+                        . '<p>' . esc($city['ko']) . ' 안에서 문의가 들어오는 지역입니다. '
+                        . '설치는 원격으로 되는 부분이 많아 여러 번 방문하지 않아도 됩니다.</p>'
+                        . link_grid($dlinks);
 
     return render([
         'pfx' => $pfx,
@@ -368,7 +431,12 @@ function page_city_hub($prov, $city, $pfx) {
         'aq' => $city['ko'] . '에서도 구축이 되나요?',
         'answer' => '됩니다. 지오테스는 <span class="hl">인터넷전화 회선과 교환기, 상담 프로그램을 직접 개발해 공급</span>합니다. '
                   . '인터넷 회선만 있으면 지역과 관계없이 구축할 수 있고, 회선과 시스템을 한 곳에서 계약하기 때문에 장애가 나도 연락할 곳이 한 곳입니다.',
-        'faq' => [],
+        'faq' => [
+            ['몇 명부터 구축할 수 있나요?', '정해진 최소 인원은 없습니다. 두세 명이 전화를 나눠 받는 곳부터 대형 콜센터까지 구성합니다.'],
+            ['비용이 얼마나 드나요?', '규모와 구성에 따라 다릅니다. 시스템 구축비, 회선 이용료, 유지보수, 부가서비스 네 항목으로 나뉘며 현황을 보고 견적을 드립니다.'],
+            ['상담 프로그램은 따로 사야 하나요?', '고객관리(CRM)와 녹취, 통계는 시스템 구축에 함께 들어갑니다. 프로그램만 따로 구매하는 항목이 없습니다.'],
+            ['쓰던 번호를 그대로 쓸 수 있나요?', '번호 이전으로 유지할 수 있습니다. 안내문과 명함을 다시 만들지 않아도 됩니다.'],
+        ],
         'body' => $body,
     ]);
 }
@@ -388,8 +456,18 @@ function page_prov_hub($prov, $pfx) {
         'sub' => esc($prov['ko'] . ' 안에서 지역을 골라 주세요.'),
         'aq' => $prov['ko'] . ' 전 지역에서 되나요?',
         'answer' => '됩니다. 인터넷전화 기반이라 <span class="hl">인터넷 회선만 있으면 어디서나 구축</span>할 수 있습니다.',
-        'faq' => [],
-        'body' => '<h2>' . esc($prov['ko']) . ' 지역</h2>' . link_grid($links),
+        'faq' => [
+            ['설치하러 직접 오시나요?', '필요하면 방문합니다. 다만 설치와 설정은 원격으로 되는 부분이 많아 일정이 오래 걸리지 않습니다.'],
+            ['수도권이 아니면 대응이 느리지 않나요?', '장애 대응은 원격으로 즉시 확인합니다. 회선과 시스템을 저희가 함께 공급하기 때문에 원인을 찾는 데 시간이 걸리지 않습니다.'],
+            ['쓰던 번호를 그대로 쓸 수 있나요?', '번호 이전으로 유지할 수 있습니다. 지역번호도 그대로 씁니다.'],
+        ],
+        'body' => '<h2>' . esc($prov['ko']) . '에서 콜센터를 알아보신다면</h2>'
+                . '<p>지역과 관계없이 같은 구성으로 구축합니다. 인터넷전화 방식이라 <strong>회선 공사가 필요 없고</strong>, '
+                . '자리를 늘릴 때도 공사 없이 추가합니다. 지점이 여러 곳이면 하나의 내선 체계로 묶어 '
+                . '지점 사이 통화료를 없앨 수 있습니다.</p>'
+                . '<div class="callout"><p>지오테스는 2006년부터 인터넷전화와 컨택센터 솔루션을 직접 개발해 왔습니다. '
+                . '회선과 시스템을 한 곳에서 계약하기 때문에 장애가 나도 연락할 곳이 한 곳입니다.</p></div>'
+                . '<h2>' . esc($prov['ko']) . ' 지역</h2>' . link_grid($links),
     ]);
 }
 
@@ -426,9 +504,9 @@ function sitemap_index() {
 }
 
 function sitemap_prov($pslug) {
-    global $PROV, $IND, $SVC;
-    if (!isset($PROV[$pslug])) return null;
-    $p = $PROV[$pslug];
+    global $IND, $SVC;
+    $p = prov_full($pslug);
+    if (!$p) return null;
     $today = date('Y-m-d');
     $u = ['/local/' . $p['slug'] . '/'];
     foreach ($p['cities'] as $c) {
@@ -502,7 +580,7 @@ $prov = $PROV[$seg[1]] ?? null;
 if (!$prov) not_found($pfx);
 if ($n === 2) out(page_prov_hub($prov, $pfx));
 
-$city = $CITY[$seg[1] . '/' . $seg[2]] ?? null;
+$city = city_full($seg[1], $seg[2]);
 if (!$city) not_found($pfx);
 if ($n === 3) out(page_city_hub($prov, $city, $pfx));
 

@@ -558,8 +558,18 @@ function not_found($pfx) {
 
 // PHP 내장 서버로 확인할 때는 정적 파일을 그대로 넘긴다 (운영에서는 .htaccess가 거른다)
 if (php_sapi_name() === 'cli-server') {
+    if ($path === '') {                       // 루트는 홈으로
+        header('Content-Type: text/html; charset=utf-8');
+        readfile(__DIR__ . '/index.html');
+        exit;
+    }
     $f = __DIR__ . '/' . $path;
-    if ($path !== '' && (is_file($f) || (is_dir($f) && is_file($f . '/index.html')))) return false;
+    if (is_file($f)) return false;            // 정적 파일
+    if (is_dir($f) && is_file($f . '/index.html')) {
+        header('Content-Type: text/html; charset=utf-8');
+        readfile($f . '/index.html');
+        exit;
+    }
 }
 
 if (!isset($seg[0]) || $seg[0] !== 'local') not_found($pfx);

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜센터 솔루션 구축 | IP 교환기·호분배·CTI | 비트웨이브</title>
+<meta name="description" content="IP 교환기, 호분배(ACD), 상담원 화면, 통계를 하나의 시스템으로 제공합니다. 자체 개발이라 화면과 흐름을 요청대로 수정합니다.">
+<link rel="canonical" href="https://bitwave.kr/solution/ipcc/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="콜센터 솔루션 구축 | IP 교환기·호분배·CTI | 비트웨이브">
+<meta property="og:description" content="IP 교환기, 호분배(ACD), 상담원 화면, 통계를 하나의 시스템으로 제공합니다. 자체 개발이라 화면과 흐름을 요청대로 수정합니다.">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/nova.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"몇 석부터 구축할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"소규모부터 대형 콜센터까지 구성합니다. 인원과 동시 통화량에 따라 시스템 사양이 달라집니다."}},{"@type":"Question","name":"기존 전화번호를 그대로 쓸 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"쓰시던 대표번호와 국번을 유지한 채 이전할 수 있습니다. 번호 이전 절차도 함께 진행합니다."}},{"@type":"Question","name":"사내 시스템과 연동되나요?","acceptedAnswer":{"@type":"Answer","text":"저희가 직접 개발한 시스템이라 고객사 ERP·주문 시스템과 연동 개발이 가능합니다."}},{"@type":"Question","name":"화면 항목을 저희 업무에 맞게 바꿀 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"소스를 직접 수정하기 때문에 항목과 업무 흐름을 요청대로 반영합니다."}}]}</script>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a href="../../" class="logo">Bit<b>WAVE</b></a>
+    <nav class="nav-links">
+      <div class="has-sub">
+        <a href="../../solution/">솔루션</a>
+        <div class="sub"><a href="../../solution/aicc/">AI 컨택센터</a><a href="../../solution/ipcc/">콜센터 솔루션</a><a href="../../solution/crm/">고객관리 CRM</a><a href="../../solution/ivr/">ARS·IVR</a><a href="../../solution/recording/">통화 녹취</a><a href="../../solution/chat/">통합 채팅상담</a><a href="../../solution/voip/">기업 인터넷전화</a><a href="../../solution/extra/">부가서비스</a><a href="../../solution/marketing/">온라인 마케팅</a></div>
+      </div>
+      <a href="../../use-cases/">활용사례</a>
+      <a href="../../industries/">업종별</a>
+      <a href="../../pricing/">요금</a>
+      <a href="../../cases/">구축사례</a>
+      <a href="../../about/">회사소개</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="tel:15555528" class="nav-call"><span>1555-5528<small>평일 09:00 – 18:00</small></span></a>
+      <button class="nav-burger" type="button" aria-label="메뉴 열기" onclick="document.getElementById('drawer').classList.add('open')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="drawer-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+      <span class="logo">Bit<b>WAVE</b></span>
+      <button class="pm-x" type="button" aria-label="메뉴 닫기" onclick="document.getElementById('drawer').classList.remove('open')">&times;</button>
+    </div>
+    <div class="dgroup"><b>솔루션</b><a href="../../solution/aicc/">AI 컨택센터</a><a href="../../solution/ipcc/">콜센터 솔루션</a><a href="../../solution/crm/">고객관리 CRM</a><a href="../../solution/ivr/">ARS·IVR</a><a href="../../solution/recording/">통화 녹취</a><a href="../../solution/chat/">통합 채팅상담</a><a href="../../solution/voip/">기업 인터넷전화</a><a href="../../solution/extra/">부가서비스</a><a href="../../solution/marketing/">온라인 마케팅</a></div>
+    <div class="dgroup"><b>도입</b><a href="../../use-cases/">활용사례</a><a href="../../industries/">업종별</a><a href="../../pricing/">요금</a><a href="../../cases/">구축사례</a></div>
+    <div class="dgroup"><b>회사</b><a href="../../about/">회사소개</a><a href="../../contact/">상담 문의</a></div>
+  </div>
+</div>
+
+<div class="hero-top">
+  <div class="wrap">
+    <p class="crumb" style="font-size:13px;color:var(--slate-400);text-align:center">
+      <a href="../../">홈</a> · <a href="../../solution/">솔루션</a> · 콜센터 솔루션
+    </p>
+    <div class="hero-center">
+      <span class="eyebrow">IPCC · CTI</span>
+      <h1 style="margin-top:16px">교환기부터 상담 화면까지<br>하나로</h1>
+      <p class="sub">교환기는 장비사에서, 상담 프로그램은 소프트웨어 회사에서 따로 사실 필요가 없습니다.<br>처음부터 한 시스템으로 만들었습니다.</p>
+      <div class="actions">
+        <a href="../../#lead" class="btn btn-brand">무료 상담 신청</a>
+        <a href="tel:15555528" class="btn btn-outline">1555-5528</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section style="padding:56px 0 0">
+  <div class="wrap">
+    <div class="answer">
+      <span class="lab">콜센터 솔루션은 무엇으로 구성되나요?</span>
+      <p>콜센터를 돌리려면 전화를 받고 나누는 <b>IP 교환기</b>, 상담원에게 전화를 배분하는 <b>호분배(ACD)</b>, 고객 정보를 띄우는 <b>상담원 화면(CTI)</b>, 그리고 <b>녹취와 통계</b>가 필요합니다. 보통은 이것들을 각각 사서 연동합니다. 비트웨이브는 <span class='hl'>이 전부를 직접 개발해 한 시스템으로 제공</span>하기 때문에 연동 비용과 기간이 들지 않습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Features</span>
+      <h2 class="h">이런 기능이 들어갑니다</h2>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <h3>IP 교환기 (IP-PBX)</h3>
+        <p class="cd">착·발신, 내선, 착신전환, 돌려주기, 당겨받기, 3자통화 등 교환기 기능 전부를 제공합니다.</p>
+      </div>
+      <div class="card">
+        <h3>호분배 (ACD)</h3>
+        <p class="cd">균등 분배, 스킬별 분배, 대기시간 기준 등 상담 조직에 맞는 방식으로 전화를 나눕니다.</p>
+      </div>
+      <div class="card">
+        <h3>상담원 화면 (CTI)</h3>
+        <p class="cd">전화가 울리면 고객 정보가 함께 뜹니다. 상담 이력을 보면서 통화합니다.</p>
+      </div>
+      <div class="card">
+        <h3>실시간 전광판</h3>
+        <p class="cd">대기·통화중·후처리·휴식 상태를 한 화면에서 봅니다. 지금 몇 명이 대기 중인지 보입니다.</p>
+      </div>
+      <div class="card">
+        <h3>통계·보고서</h3>
+        <p class="cd">수신·발신, 일·주·월별, 요일별, 내선별 통계를 뽑습니다.</p>
+      </div>
+      <div class="card">
+        <h3>감청·속삭임</h3>
+        <p class="cd">관리자가 통화를 들으며 상담원에게만 들리는 안내를 넣을 수 있습니다. 신입 교육에 씁니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--slate-50)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Fit</span>
+      <h2 class="h">이런 곳에 필요합니다</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="sn wn c0">1</span><div><h4>상담 인원이 늘고 있는 곳</h4><p>전화를 누가 받을지 사람이 정하고 있다면 분배 규칙이 필요한 시점입니다.</p></div></div>
+      <div class="step"><span class="sn wn c1">2</span><div><h4>지점이 여러 곳인 곳</h4><p>본사와 지점 전화를 하나의 번호 체계로 묶습니다.</p></div></div>
+      <div class="step"><span class="sn wn c2">3</span><div><h4>재택·외부 상담이 있는 곳</h4><p>사무실 밖에서도 같은 내선과 같은 화면을 씁니다.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap-narrow">
+    <div class="sec-head">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h">자주 묻는 것</h2>
+    </div>
+    <div class="faq" style="max-width:720px;margin:0 auto">
+      <details><summary>몇 석부터 구축할 수 있나요?</summary><div class="a">소규모부터 대형 콜센터까지 구성합니다. 인원과 동시 통화량에 따라 시스템 사양이 달라집니다.</div></details>
+      <details><summary>기존 전화번호를 그대로 쓸 수 있나요?</summary><div class="a">쓰시던 대표번호와 국번을 유지한 채 이전할 수 있습니다. 번호 이전 절차도 함께 진행합니다.</div></details>
+      <details><summary>사내 시스템과 연동되나요?</summary><div class="a">저희가 직접 개발한 시스템이라 고객사 ERP·주문 시스템과 연동 개발이 가능합니다.</div></details>
+      <details><summary>화면 항목을 저희 업무에 맞게 바꿀 수 있나요?</summary><div class="a">소스를 직접 수정하기 때문에 항목과 업무 흐름을 요청대로 반영합니다.</div></details>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--slate-50)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">More</span>
+      <h2 class="h">함께 많이 쓰는 솔루션</h2>
+    </div>
+    <div class="ind-grid">
+      <a href="../../solution/aicc/" class="ind"><h4>AI 컨택센터</h4><p>AICC</p></a>
+      <a href="../../solution/crm/" class="ind"><h4>고객관리 CRM</h4><p>CRM</p></a>
+      <a href="../../solution/ivr/" class="ind"><h4>ARS·IVR</h4><p>ARS · IVR</p></a>
+      <a href="../../solution/recording/" class="ind"><h4>통화 녹취</h4><p>Recording</p></a>
+    </div>
+  </div>
+</section>
+
+<section style="padding:0 0 76px">
+  <div class="wrap">
+    <div class="final">
+      <div class="doodle-circle" style="width:130px;height:130px;left:-40px;top:-40px"></div>
+      <div class="doodle-circle" style="width:80px;height:80px;right:-26px;bottom:-26px;background:rgba(53,224,161,.85)"></div>
+      <h2>무엇이 불편하신지만 알려주세요</h2>
+      <div class="fp">1555-5528</div>
+      <p class="fn">평일 09:00 – 18:00 · 영업 070-7615-0119 · 기술 070-7615-0927</p>
+      <div class="fbtn">
+        <a href="tel:15555528" class="btn btn-white">전화 상담</a>
+        <a href="../../#lead" class="btn" style="background:rgba(255,255,255,.16);color:#fff">상담 신청</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo">Bit<b>WAVE</b></div>
+    <div class="fnav">
+      <a href="../../solution/">솔루션</a><a href="../../use-cases/">활용사례</a><a href="../../industries/">업종별</a>
+      <a href="../../pricing/">요금</a><a href="../../cases/">구축사례</a><a href="../../about/">회사소개</a><a href="../../contact/">상담문의</a>
+    </div>
+    <div class="info">
+      ㈜지오테스솔루션 · 대표이사 신명남 · 사업자등록번호 144-81-03835<br>
+      통신판매신고 제2023-고양덕양구-0487호 · 개인정보책임자 정필락<br>
+      경기 고양시 덕양구 삼막3길 5 고양삼송듀클래스 904호<br>
+      고객센터 1555-5528 · 영업 070-7615-0119 · 기술 070-7615-0927 · help@ziotes.com<br>
+      © 2006 ZioTEs Solution Inc. All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+<div class="fab">
+  <a href="tel:15555528" class="call" aria-label="전화 상담">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+  </a>
+</div>
+
+</body>
+</html>

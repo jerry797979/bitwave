@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약·접수 AI 자동화 | 비트웨이브</title>
+<meta name="description" content="예약 확인, 변경, 취소는 통화 내용이 거의 정해져 있습니다.">
+<link rel="canonical" href="https://bitwave.kr/use-cases/booking/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="예약·접수 AI 자동화 | 비트웨이브">
+<meta property="og:description" content="예약 확인, 변경, 취소는 통화 내용이 거의 정해져 있습니다.">
+<meta property="og:locale" content="ko_KR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/nova.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"기존 예약 시스템과 연결되나요?","acceptedAnswer":{"@type":"Answer","text":"연동 방식은 쓰시는 시스템을 보고 정합니다."}},{"@type":"Question","name":"취소도 받을 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"취소와 변경 모두 통화 안에서 처리합니다."}},{"@type":"Question","name":"확정 문자는 자동인가요?","acceptedAnswer":{"@type":"Answer","text":"통화가 끝나면 바로 나갑니다."}}]}</script>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a href="../../" class="logo">Bit<b>WAVE</b></a>
+    <nav class="nav-links">
+      <div class="has-sub">
+        <a href="../../solution/">솔루션</a>
+        <div class="sub"><a href="../../solution/aicc/">AI 컨택센터</a><a href="../../solution/ipcc/">콜센터 솔루션</a><a href="../../solution/crm/">고객관리 CRM</a><a href="../../solution/ivr/">ARS·IVR</a><a href="../../solution/recording/">통화 녹취</a><a href="../../solution/chat/">통합 채팅상담</a><a href="../../solution/voip/">기업 인터넷전화</a><a href="../../solution/extra/">부가서비스</a><a href="../../solution/marketing/">온라인 마케팅</a></div>
+      </div>
+      <a href="../../use-cases/">활용사례</a>
+      <a href="../../industries/">업종별</a>
+      <a href="../../pricing/">요금</a>
+      <a href="../../cases/">구축사례</a>
+      <a href="../../about/">회사소개</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="tel:15555528" class="nav-call"><span>1555-5528<small>평일 09:00 – 18:00</small></span></a>
+      <button class="nav-burger" type="button" aria-label="메뉴 열기" onclick="document.getElementById('drawer').classList.add('open')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="drawer-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+      <span class="logo">Bit<b>WAVE</b></span>
+      <button class="pm-x" type="button" aria-label="메뉴 닫기" onclick="document.getElementById('drawer').classList.remove('open')">&times;</button>
+    </div>
+    <div class="dgroup"><b>솔루션</b><a href="../../solution/aicc/">AI 컨택센터</a><a href="../../solution/ipcc/">콜센터 솔루션</a><a href="../../solution/crm/">고객관리 CRM</a><a href="../../solution/ivr/">ARS·IVR</a><a href="../../solution/recording/">통화 녹취</a><a href="../../solution/chat/">통합 채팅상담</a><a href="../../solution/voip/">기업 인터넷전화</a><a href="../../solution/extra/">부가서비스</a><a href="../../solution/marketing/">온라인 마케팅</a></div>
+    <div class="dgroup"><b>도입</b><a href="../../use-cases/">활용사례</a><a href="../../industries/">업종별</a><a href="../../pricing/">요금</a><a href="../../cases/">구축사례</a></div>
+    <div class="dgroup"><b>회사</b><a href="../../about/">회사소개</a><a href="../../contact/">상담 문의</a></div>
+  </div>
+</div>
+<div class="hero-top">
+  <div class="wrap">
+    <p style="font-size:13px;color:var(--slate-400);text-align:center"><a href="../../">홈</a> · <a href="../../use-cases/">활용사례</a> · 예약·접수</p>
+    <div class="hero-center">
+      <span class="eyebrow">Use case</span>
+      <h1 style="margin-top:16px">예약 변경 전화를<br>사람이 받지 않아도 됩니다</h1>
+      <p class="sub">예약 확인, 변경, 취소는 통화 내용이 거의 정해져 있습니다.</p>
+      <div class="actions">
+        <a href="../../#lead" class="btn btn-brand">무료 상담 신청</a>
+        <a href="tel:15555528" class="btn btn-outline">1555-5528</a>
+      </div>
+    </div>
+  </div>
+</div>
+<section style="padding:56px 0 0">
+  <div class="wrap"><div class="answer"><span class="lab">예약 전화는 어떤 점이 자동화하기 좋은가요?</span><p>예약 통화는 <span class='hl'>물어볼 것과 확인할 것이 정해져 있습니다</span>. 누구인지 확인하고, 언제로 옮길지 듣고, 가능한 시간을 알려주면 끝납니다. 여기에 방문 전 확인 전화까지 붙이면 빈자리가 줄어듭니다.</p></div></div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Outcomes</span><h2 class="h">무엇이 달라지나요</h2></div>
+    <div class="cards3"><div class="card"><h3>빈자리 감소</h3><p class="cd">오기로 한 사람이 안 오는 일이 줄어듭니다.</p></div><div class="card"><h3>접수 누락 방지</h3><p class="cd">업무 외 시간 예약도 받아 둡니다.</p></div><div class="card"><h3>변경 처리 자동화</h3><p class="cd">일정 조정을 통화 안에서 끝냅니다.</p></div></div>
+  </div>
+</section>
+<section style="background:var(--slate-50)">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Workflow</span><h2 class="h">통화는 이렇게 흘러갑니다</h2></div>
+    <div class="steps"><div class="step"><span class="sn wn c0">1</span><div><h4>본인 확인</h4><p>이름과 연락처로 예약 건을 찾습니다.</p></div></div><div class="step"><span class="sn wn c1">2</span><div><h4>가능 시간 안내</h4><p>비어 있는 시간을 알려주고 고릅니다.</p></div></div><div class="step"><span class="sn wn c2">3</span><div><h4>확정 안내 발송</h4><p>정해진 일정을 문자로 보냅니다.</p></div></div><div class="step"><span class="sn wn c3">4</span><div><h4>방문 전 확인</h4><p>하루 이틀 전에 다시 걸어 확인합니다.</p></div></div></div>
+  </div>
+</section>
+<section>
+  <div class="wrap-narrow">
+    <div class="sec-head"><span class="eyebrow">FAQ</span><h2 class="h">자주 묻는 것</h2></div>
+    <div class="faq" style="max-width:720px;margin:0 auto"><details><summary>기존 예약 시스템과 연결되나요?</summary><div class="a">연동 방식은 쓰시는 시스템을 보고 정합니다.</div></details><details><summary>취소도 받을 수 있나요?</summary><div class="a">취소와 변경 모두 통화 안에서 처리합니다.</div></details><details><summary>확정 문자는 자동인가요?</summary><div class="a">통화가 끝나면 바로 나갑니다.</div></details></div>
+  </div>
+</section>
+<section style="background:var(--slate-50)">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">More</span><h2 class="h">다른 활용사례</h2></div>
+    <div class="ind-grid"><a href="../../use-cases/support/" class="ind"><h4>고객 응대</h4></a><a href="../../use-cases/routing/" class="ind"><h4>대표번호 안내</h4></a><a href="../../use-cases/outbound/" class="ind"><h4>아웃바운드 영업</h4></a><a href="../../use-cases/reminder/" class="ind"><h4>리마인드·해피콜</h4></a></div>
+  </div>
+</section>
+<section style="padding:0 0 76px">
+  <div class="wrap">
+    <div class="final">
+      <div class="doodle-circle" style="width:130px;height:130px;left:-40px;top:-40px"></div>
+      <div class="doodle-circle" style="width:80px;height:80px;right:-26px;bottom:-26px;background:rgba(53,224,161,.85)"></div>
+      <h2>무엇이 불편하신지만 알려주세요</h2>
+      <div class="fp">1555-5528</div>
+      <p class="fn">평일 09:00 – 18:00 · 영업 070-7615-0119 · 기술 070-7615-0927</p>
+      <div class="fbtn">
+        <a href="tel:15555528" class="btn btn-white">전화 상담</a>
+        <a href="../../#lead" class="btn" style="background:rgba(255,255,255,.16);color:#fff">상담 신청</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo">Bit<b>WAVE</b></div>
+    <div class="fnav">
+      <a href="../../solution/">솔루션</a><a href="../../use-cases/">활용사례</a><a href="../../industries/">업종별</a>
+      <a href="../../pricing/">요금</a><a href="../../cases/">구축사례</a><a href="../../about/">회사소개</a><a href="../../contact/">상담문의</a>
+    </div>
+    <div class="info">
+      ㈜지오테스솔루션 · 대표이사 신명남 · 사업자등록번호 144-81-03835<br>
+      통신판매신고 제2023-고양덕양구-0487호 · 개인정보책임자 정필락<br>
+      경기 고양시 덕양구 삼막3길 5 고양삼송듀클래스 904호<br>
+      고객센터 1555-5528 · 영업 070-7615-0119 · 기술 070-7615-0927 · help@ziotes.com<br>
+      © 2006 ZioTEs Solution Inc. All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+<div class="fab">
+  <a href="tel:15555528" class="call" aria-label="전화 상담">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+  </a>
+</div>
+
+</body>
+</html>

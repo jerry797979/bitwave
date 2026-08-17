@@ -614,13 +614,37 @@ LOGOS = [
 ]
 
 
+# 업종별 고객사 — 로고가 있는 곳과 제안서에만 있던 곳을 합친 목록
+CLIENTS = [
+ ("통신·IT", ["KT olleh", "LG U+", "SK네트웍스", "kt cs", "넥스트네트워크",
+             "LG상사", "아이알링크", "엠피온"]),
+ ("교육", ["YBM시사닷컴", "정철", "아발론교육", "문깡 잉글리시스쿨", "스피크케어",
+          "이설당", "멀티캠퍼스", "스터디맥스", "틴타임즈", "아이보린", "고려대학교"]),
+ ("공공·기관", ["울산광역시 교육연구정보원", "축산물안전관리인증원", "의왕도시공사",
+              "한국기계산업진흥회", "행복커넥트", "공직메일"]),
+ ("제조·유통·서비스", ["삼성SDI 서비스센터", "마켓컬리", "홍국F&B", "카누다",
+                   "바이오인프라", "씨에스렌탈", "다온홈시스", "웰컴론", "도움과나눔"]),
+]
+
+
 def logo_grid():
     figs = "".join(
         f'<figure><img src="/assets/logos/{f}.png" alt="{e(n)}" loading="lazy" decoding="async">'
         f'<figcaption>{e(n)}</figcaption></figure>' for f, n in LOGOS)
-    names = " · ".join(n for _, n in LOGOS)
+
+    groups = ""
+    total = 0
+    for cat, names in CLIENTS:
+        total += len(names)
+        chips = "".join(f'<span>{e(n)}</span>' for n in names)
+        groups += (f'<div class="client-row"><h4>{e(cat)}</h4>'
+                   f'<div class="chips-ink">{chips}</div></div>')
+
     return (f'<div class="logos">{figs}</div>'
-            f'<p class="note">{e(names)} 외 다수. 로고는 각 사의 상표입니다.</p>')
+            f'<p class="note">로고는 각 사의 상표입니다.</p>'
+            f'<div class="client-list">{groups}</div>'
+            f'<p class="note">지면에 옮긴 {total}곳 외에도 구축한 곳이 더 있습니다. '
+            f'업종이 같은 곳의 사례가 궁금하시면 상담 시 말씀해 주세요.</p>')
 
 
 def page_cases():
@@ -637,11 +661,11 @@ def page_cases():
   </table>
 </div>
 <p class="note">※ 위 구성 내역은 예시입니다. 실제 사례로 교체 예정입니다.</p>'''
-    return (head("구축 사례 | 50개 기업의 컨택센터 | 지오테스",
-                 "2006년부터 50개 기업의 컨택센터를 구축했습니다. 업종과 규모, 도입 구성으로 정리했습니다.",
+    return (head("구축 사례 | 60여 곳의 컨택센터 | 지오테스",
+                 "2006년부터 60여 곳의 컨택센터를 구축했습니다. 업종과 규모, 도입 구성으로 정리했습니다.",
                  f"{SITE}/cases/")
       + header()
-      + hero("Cases", "50개 기업이<br>이렇게 쓰고 있습니다",
+      + hero("Cases", "60여 곳이<br>이렇게 쓰고 있습니다",
              "통신사부터 교육, 유통, 공공기관까지.<br>전화가 멈추면 안 되는 곳들과 일해 왔습니다.",
              '<a href="/">홈</a> · 구축사례')
       + sec("Clients", "이런 곳들과 일했습니다", logo_grid())
@@ -848,7 +872,7 @@ def main():
       + f'</ul></a>' for i in INDUSTRIES)
     write(os.path.join(DIST, "industries", "index.html"),
           hub("Industries", "업종마다<br>필요한 것이 다릅니다",
-              "50개 기업을 구축하며 쌓인 업종별 기본 구성이 있습니다.", ind_cards,
+              "60여 곳을 구축하며 쌓인 업종별 기본 구성이 있습니다.", ind_cards,
               f"{SITE}/industries/", "업종별 콜센터 구축 | 지오테스",
               "병원, 공공, 금융, 교육, 쇼핑몰, 제조, 유통, 법무, 심리상담, 분양, 렌탈."), 1)
     for i in INDUSTRIES:

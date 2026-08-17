@@ -575,6 +575,7 @@ FOOTER = f'''
   </a>
 </div>
 
+<script src="/assets/lead.js" defer></script>
 </body>
 </html>
 '''

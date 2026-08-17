@@ -561,7 +561,7 @@
     </div>
 
     <div class="lead-wrap">
-      <form class="lead" id="leadForm" onsubmit="return false">
+      <form class="lead" id="leadForm">
         <h3>무료 상담 신청</h3>
         <p class="ls">평일 09:00 – 18:00 · 1555-5528</p>
 
@@ -587,7 +587,7 @@
         <textarea id="f-memo" name="memo" placeholder="지금 쓰시는 시스템이나 불편한 점을 적어주세요."></textarea>
 
         <div class="agree">
-          <input type="checkbox" id="f-agree" required>
+          <input type="checkbox" id="f-agree" name="agree" value="1" required>
           <label for="f-agree" style="margin:0;font-weight:500">상담을 위한 <a href="#">개인정보 수집·이용</a>에 동의합니다</label>
         </div>
 
@@ -640,5 +640,6 @@
   </a>
 </div>
 
+<script src="assets/lead.js" defer></script>
 </body>
 </html>

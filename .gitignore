@@ -7,3 +7,9 @@ Thumbs.db
 
 # 내부 기획 문서 (공개 저장소에 올리지 않음)
 _notes/
+
+# 상담폼 설정과 수집 데이터 (토큰·개인정보)
+dist/_config.php
+_ziotes_leads/
+dist/_leads/*.jsonl
+dist/_leads/.rate

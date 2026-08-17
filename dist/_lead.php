@@ -27,9 +27,25 @@ $cfg = is_file($cfgFile) ? require $cfgFile : [];
 $cfg += [
     'telegram_token' => '', 'telegram_chat_id' => '',
     'mail_to' => '', 'mail_from' => 'no-reply@ziotes.com',
-    'admin_key' => '', 'store_dir' => __DIR__ . '/_leads',
+    'admin_key' => '', 'store_dir' => null,
     'min_seconds' => 3, 'per_ip_limit' => 5,
 ];
+
+/**
+ * 신청 내용을 저장할 폴더.
+ *
+ * 개인정보가 담기므로 웹에서 열리면 안 됩니다.
+ * .htaccess 로 막아 두었지만 nginx 처럼 .htaccess 를 읽지 않는 서버도 있어서,
+ * 기본값을 웹 폴더 '바깥'으로 잡습니다. 바깥에 못 만들면 안쪽으로 물러섭니다.
+ */
+function store_dir(array $cfg): string {
+    if (!empty($cfg['store_dir'])) return $cfg['store_dir'];
+    $outside = dirname(__DIR__) . '/_ziotes_leads';
+    if (is_dir($outside) || @mkdir($outside, 0700, true)) {
+        if (is_writable($outside)) return $outside;
+    }
+    return __DIR__ . '/_leads';   // 물러선 경우 — .htaccess 가 막아 줍니다
+}
 
 // ---------------------------------------------------------------- 입력
 
@@ -40,16 +56,26 @@ if (empty($in)) {                       // fetch 로 JSON을 보낸 경우
     if (is_array($j)) $in = $j;
 }
 
+/** 글자 수로 자릅니다. mbstring 확장이 없는 서버에서도 한글이 깨지지 않게 처리합니다. */
+function cut(string $s, int $max): string {
+    if (function_exists('mb_substr')) return mb_substr($s, 0, $max, 'UTF-8');
+    if (preg_match('/^.{0,' . $max . '}/us', $s, $m)) return $m[0];
+    return substr($s, 0, $max);
+}
+
 $get = function (string $k, int $max = 200) use ($in) {
     $v = trim((string)($in[$k] ?? ''));
     $v = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $v);   // 제어문자 제거
-    return mb_substr($v, 0, $max, 'UTF-8');
+    return cut((string)$v, $max);
 };
 
 // 사람이 아니면 걸러낸다 ─ 봇은 숨은 칸을 채우고, 너무 빨리 보낸다
 if ($get('website') !== '') done(true, '접수되었습니다.');          // 벌집(honeypot)
+// 폼을 연 시각과의 차이. 방문자 기기 시계가 서버보다 앞서면 음수가 나올 수 있는데,
+// 그때는 막지 않습니다. 시계가 틀렸다고 정상 문의를 놓치면 안 됩니다.
 $openedAt = (int)$get('t', 20);
-if ($openedAt > 0 && (time() - $openedAt) < (int)$cfg['min_seconds']) {
+$age = time() - $openedAt;
+if ($openedAt > 0 && $age >= 0 && $age < (int)$cfg['min_seconds']) {
     done(false, '잠시 후 다시 눌러 주세요.', 429);
 }
 
@@ -70,7 +96,7 @@ if ($agree === '')                     done(false, '개인정보 수집·이용�
 $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '-';
 $ip = trim(explode(',', $ip)[0]);
 
-$dir = $cfg['store_dir'];
+$dir = store_dir($cfg);
 if (!is_dir($dir)) @mkdir($dir, 0700, true);
 
 $rateFile = $dir . '/.rate';

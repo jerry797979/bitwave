@@ -1,0 +1,8 @@
+﻿# 상담 신청 원본이 쌓이는 폴더입니다. 웹에서 직접 열리면 안 됩니다.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

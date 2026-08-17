@@ -834,21 +834,21 @@ def page_demo():
 def page_contact():
     form = '''
 <div class="lead-wrap">
-  <form class="lead" onsubmit="return false">
+  <form class="lead">
     <h3>무료 상담 신청</h3>
     <p class="ls">평일 09:00 – 18:00 · ''' + TEL + '''</p>
-    <label for="c-company">회사명</label><input type="text" id="c-company" required>
-    <label for="c-name">담당자</label><input type="text" id="c-name" required>
-    <label for="c-tel">연락처</label><input type="tel" id="c-tel" required>
+    <label for="c-company">회사명</label><input type="text" id="c-company" name="company" required>
+    <label for="c-name">담당자</label><input type="text" id="c-name" name="name" required>
+    <label for="c-tel">연락처</label><input type="tel" id="c-tel" name="tel" required>
     <label for="c-size">상담 인원</label>
-    <select id="c-size"><option>5석 이하</option><option>6 – 20석</option><option>21 – 50석</option><option>51석 이상</option><option>아직 모르겠습니다</option></select>
-    <label for="c-memo">문의 내용</label><textarea id="c-memo"></textarea>
-    <div class="agree"><input type="checkbox" id="c-agree" required>
+    <select id="c-size" name="size"><option>5석 이하</option><option>6 – 20석</option><option>21 – 50석</option><option>51석 이상</option><option>아직 모르겠습니다</option></select>
+    <label for="c-memo">문의 내용</label><textarea id="c-memo" name="memo"></textarea>
+    <div class="agree"><input type="checkbox" id="c-agree" name="agree" value="1" required>
       <label for="c-agree" style="margin:0;font-weight:500">상담을 위한 개인정보 수집·이용에 동의합니다</label></div>
     <button type="submit" class="btn btn-brand">상담 신청하기</button>
   </form>
 </div>
-<p class="note" style="text-align:center">※ 폼 전송 기능은 서버 연결 후 동작합니다.</p>'''
+<p class="note" style="text-align:center">보내주신 내용은 상담 목적으로만 쓰이며, 처리 후 보관 기간이 지나면 지웁니다.</p>'''
     info = '''<div class="cards3">
       <div class="card"><h3>고객센터</h3><p class="cd">''' + TEL + '''<br>평일 09:00 – 18:00</p></div>
       <div class="card"><h3>영업 문의</h3><p class="cd">070-7615-0119<br>02-6974-0888</p></div>

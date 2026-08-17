@@ -15,7 +15,7 @@
 import os, sys, html
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gen_solution import relativize, SITE, TEL, TEL_RAW
+from gen_solution import relativize, SITE, OG_BASE, TEL, TEL_RAW
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 OUT = os.path.join(ROOT, "dist", "guide")
@@ -370,6 +370,11 @@ def render(g):
 <meta property="og:title" content="{e(g["title"])}">
 <meta property="og:description" content="{e(g["desc"])}">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="지오테스">
+<meta property="og:image" content="{OG_BASE}/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -445,6 +450,15 @@ def render_index():
 <title>콜센터 가이드 | 지오테스</title>
 <meta name="description" content="콜센터 구축을 처음 알아보는 분들을 위한 설명. 견적서에 나오는 용어부터 업체 고르는 기준까지 쉬운 말로 정리했습니다.">
 <link rel="canonical" href="{SITE}/guide/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="콜센터 가이드 | 지오테스">
+<meta property="og:description" content="콜센터 구축을 처음 알아보는 분들을 위한 설명. 견적서에 나오는 용어부터 업체 고르는 기준까지 쉬운 말로 정리했습니다.">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="지오테스">
+<meta property="og:image" content="{OG_BASE}/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/nova-post.css">
@@ -573,6 +587,11 @@ def render_glossary():
 <meta property="og:title" content="콜센터 용어집 | 지오테스">
 <meta property="og:description" content="견적서에 나오는 콜센터 용어 {count}개를 쉬운 말로 정리했습니다.">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="지오테스">
+<meta property="og:image" content="{OG_BASE}/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/nova-post.css">

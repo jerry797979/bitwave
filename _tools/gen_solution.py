@@ -16,6 +16,9 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "dist", "solution")
 
 SITE = "https://ziotes.com"
+# 카카오톡·문자로 링크를 보낼 때 쓰이는 이미지 주소.
+# 실제로 열리는 주소여야 썸네일이 뜹니다. 거래처 서버로 옮긴 뒤에는 SITE 로 바꾸세요.
+OG_BASE = "https://jerry797979.github.io/bitwave"
 TEL = "1555-5528"
 TEL_RAW = "15555528"
 
@@ -475,6 +478,11 @@ def head(title, desc, canonical, faq=None):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="지오테스">
+<meta property="og:image" content="{OG_BASE}/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">

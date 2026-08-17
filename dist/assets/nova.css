@@ -200,6 +200,8 @@ table.t tr:last-child td,table.t tr:last-child th{border-bottom:none}
 .step h4{font-size:17px;font-weight:800}
 .step p{font-size:14px;color:var(--slate-500);margin-top:5px;line-height:1.6}
 .step p b{color:var(--slate-700)}
+.step-inds{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.step-inds span{background:rgba(109,74,255,.07);color:var(--brand);border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:700}
 
 /* ==========================================================================
    화면 예시 (mock)

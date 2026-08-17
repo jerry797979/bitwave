@@ -1,0 +1,146 @@
+<?php
+/**
+ * 상담 신청 접수
+ *
+ * 폼에서 POST로 받아서
+ *   1) 검사하고  2) 파일로 남기고  3) 텔레그램·이메일로 알립니다.
+ *
+ * 설정은 _config.php 에 있습니다. (_config.example.php 를 복사해서 만드세요)
+ * 저장 위치는 _leads/ 이며 웹에서 직접 열리지 않도록 막아 두었습니다.
+ */
+
+header('Content-Type: application/json; charset=utf-8');
+header('X-Content-Type-Options: nosniff');
+
+function done(bool $ok, string $msg, int $code = 200) {
+    http_response_code($code);
+    echo json_encode(['ok' => $ok, 'message' => $msg], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    done(false, '잘못된 접근입니다.', 405);
+}
+
+$cfgFile = __DIR__ . '/_config.php';
+$cfg = is_file($cfgFile) ? require $cfgFile : [];
+$cfg += [
+    'telegram_token' => '', 'telegram_chat_id' => '',
+    'mail_to' => '', 'mail_from' => 'no-reply@ziotes.com',
+    'admin_key' => '', 'store_dir' => __DIR__ . '/_leads',
+    'min_seconds' => 3, 'per_ip_limit' => 5,
+];
+
+// ---------------------------------------------------------------- 입력
+
+$in = $_POST;
+if (empty($in)) {                       // fetch 로 JSON을 보낸 경우
+    $raw = file_get_contents('php://input');
+    $j = json_decode($raw, true);
+    if (is_array($j)) $in = $j;
+}
+
+$get = function (string $k, int $max = 200) use ($in) {
+    $v = trim((string)($in[$k] ?? ''));
+    $v = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $v);   // 제어문자 제거
+    return mb_substr($v, 0, $max, 'UTF-8');
+};
+
+// 사람이 아니면 걸러낸다 ─ 봇은 숨은 칸을 채우고, 너무 빨리 보낸다
+if ($get('website') !== '') done(true, '접수되었습니다.');          // 벌집(honeypot)
+$openedAt = (int)$get('t', 20);
+if ($openedAt > 0 && (time() - $openedAt) < (int)$cfg['min_seconds']) {
+    done(false, '잠시 후 다시 눌러 주세요.', 429);
+}
+
+$company = $get('company', 100);
+$name    = $get('name', 50);
+$tel     = $get('tel', 30);
+$size    = $get('size', 40);
+$memo    = $get('memo', 2000);
+$agree   = $get('agree', 10);
+$page    = $get('page', 200);
+
+if ($name === '' || $tel === '')       done(false, '담당자와 연락처를 적어 주세요.', 422);
+if (!preg_match('/^[0-9+\-\s()]{8,30}$/', $tel)) done(false, '연락처를 다시 확인해 주세요.', 422);
+if ($agree === '')                     done(false, '개인정보 수집·이용에 동의해 주세요.', 422);
+
+// ---------------------------------------------------------------- 같은 IP 제한
+
+$ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '-';
+$ip = trim(explode(',', $ip)[0]);
+
+$dir = $cfg['store_dir'];
+if (!is_dir($dir)) @mkdir($dir, 0700, true);
+
+$rateFile = $dir . '/.rate';
+$now = time();
+$rates = is_file($rateFile) ? (json_decode(file_get_contents($rateFile), true) ?: []) : [];
+$rates = array_filter($rates, fn($t) => $t > $now - 3600);          // 한 시간 지난 기록은 버림
+$mine = count(array_filter($rates, fn($t, $k) => str_starts_with($k, $ip . '|'), ARRAY_FILTER_USE_BOTH));
+if ($mine >= (int)$cfg['per_ip_limit']) {
+    done(false, '접수가 너무 많습니다. 잠시 후 다시 시도해 주세요.', 429);
+}
+$rates[$ip . '|' . $now . '|' . random_int(100, 999)] = $now;
+@file_put_contents($rateFile, json_encode($rates), LOCK_EX);
+
+// ---------------------------------------------------------------- 저장
+
+$row = [
+    'at'      => date('Y-m-d H:i:s'),
+    'company' => $company,
+    'name'    => $name,
+    'tel'     => $tel,
+    'size'    => $size,
+    'memo'    => $memo,
+    'page'    => $page,
+    'ip'      => $ip,
+];
+
+$file = $dir . '/' . date('Y-m') . '.jsonl';
+$saved = @file_put_contents($file, json_encode($row, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
+if ($saved === false) {
+    error_log('[lead] 저장 실패: ' . $file);
+}
+
+// ---------------------------------------------------------------- 알림
+
+$lines = [
+    '상담 신청이 들어왔습니다',
+    '',
+    '회사   ' . ($company ?: '-'),
+    '담당자 ' . $name,
+    '연락처 ' . $tel,
+    '규모   ' . ($size ?: '-'),
+    '내용   ' . ($memo ?: '-'),
+    '',
+    '경로   ' . ($page ?: '-'),
+    '시각   ' . $row['at'],
+];
+$text = implode("\n", $lines);
+
+if ($cfg['telegram_token'] && $cfg['telegram_chat_id']) {
+    $url = 'https://api.telegram.org/bot' . $cfg['telegram_token'] . '/sendMessage';
+    $body = http_build_query([
+        'chat_id' => $cfg['telegram_chat_id'],
+        'text' => $text,
+        'disable_web_page_preview' => 'true',
+    ]);
+    $ctx = stream_context_create(['http' => [
+        'method' => 'POST',
+        'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+        'content' => $body,
+        'timeout' => 5,
+        'ignore_errors' => true,
+    ]]);
+    @file_get_contents($url, false, $ctx);
+}
+
+if ($cfg['mail_to'] && function_exists('mail')) {
+    $subject = '=?UTF-8?B?' . base64_encode('[지오테스] 상담 신청 - ' . $name) . '?=';
+    $headers = "From: " . $cfg['mail_from'] . "\r\n"
+             . "Content-Type: text/plain; charset=UTF-8\r\n";
+    @mail($cfg['mail_to'], $subject, $text, $headers);
+}
+
+done(true, '접수되었습니다. 확인 후 연락드리겠습니다.');

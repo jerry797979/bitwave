@@ -723,12 +723,29 @@ def page_about():
       <div class="card"><h3>콜센터 애플리케이션</h3><p class="cd">CRM, 녹취, 통계 등 상담 프로그램 개발.</p></div>
       <div class="card"><h3>Centrex Switch</h3><p class="cd">통신사업자용 VoIP 및 SIP Proxy 시스템.</p></div>
       <div class="card"><h3>온라인 마케팅</h3><p class="cd">마케팅 프로그램 개발과 대행.</p></div>
-    </div>
-    <div class="benefit-strip" style="margin-top:24px">
-      <div class="bs-item"><span class="bs-big" style="font-size:22px">3사</span><div><b>KT · LG U+ · SK브로드밴드 제휴</b><p>회선을 한 곳에 묶지 않고 조건이 맞는 쪽으로 고릅니다</p></div></div>
-      <div class="bs-item mint"><span class="bs-big" style="color:var(--mint-ink);font-size:22px">약정 X</span><div><b>약정 기간이 없습니다</b><p>묶어두고 위약금을 물리는 방식으로 팔지 않습니다</p></div></div>
-      <div class="bs-item sun"><span class="bs-big" style="color:var(--ink);font-size:22px">이중화</span><div><b>장애 시 백업 서버로 자동 전환</b><p>전화가 멈추면 안 되는 곳을 기준으로 구성합니다</p></div></div>
+
     </div>'''
+    terms = '''<div class="cards3">
+      <div class="card">
+        <span class="svc-tag">회선</span>
+        <h3>통신 3사와 모두 제휴</h3>
+        <p class="cd">KT, LG U+, SK브로드밴드. 한 곳에 묶지 않고 조건이 맞는 쪽을 골라 드립니다.
+          중복으로 열어 두면 한쪽에 문제가 생겨도 통화가 끊기지 않습니다.</p>
+      </div>
+      <div class="card">
+        <span class="svc-tag">계약</span>
+        <h3>약정 기간이 없습니다</h3>
+        <p class="cd">몇 년을 묶어두고 중간에 그만두면 위약금을 물리는 방식으로 팔지 않습니다.
+          쓰다가 맞지 않으면 그만두실 수 있어야 저희도 계속 잘해야 합니다.</p>
+      </div>
+      <div class="card">
+        <span class="svc-tag">장애 대비</span>
+        <h3>시스템을 이중으로 둡니다</h3>
+        <p class="cd">문제가 생기면 백업 서버로 자동으로 넘어갑니다.
+          전화가 멈추면 안 되는 곳을 기준으로 구성합니다.</p>
+      </div>
+    </div>'''
+
     return (head("회사소개 | ㈜지오테스솔루션 · 지오테스",
                  "2006년부터 인터넷전화와 컨택센터 솔루션을 직접 개발해 온 ㈜지오테스솔루션의 회사 정보입니다.",
                  f"{SITE}/about/")
@@ -737,17 +754,21 @@ def page_about():
              "회선을 공급하면서 교환기와 상담 프로그램까지 직접 만드는 곳은 많지 않습니다.",
              '<a href="/">홈</a> · 회사소개')
       + sec("Business", "하는 일", biz)
-      + sec("History", "걸어온 길", hist_html(), bg=True)
+      + sec("Terms", "이렇게 거래합니다", terms, bg=True)
+      + sec("History", "걸어온 길", hist_html())
       + sec("Company", "회사 정보", body, narrow=True) + FOOTER)
 
 
 def hist_html():
+    # 설명에는 <b> 같은 강조를 직접 씁니다. 연도·제목만 escape 합니다.
     rows = "".join(
       f'<div class="hist-item{" on" if on else ""}">'
       f'<div class="hist-yr">{e(y)}</div>'
-      f'<div class="hist-body"><h4>{e(t)}</h4><p>{e(d)}</p></div></div>'
+      f'<div class="hist-body"><h4>{e(t)}</h4><p>{d}</p></div></div>'
       for y, t, d, on in HISTORY)
-    return f'<div class="hist">{rows}</div>'
+    return (f'<div class="hist">{rows}</div>'
+            f'<p class="note">2006년 창업 이후 지금까지 이어온 기록입니다. '
+            f'회사 이름과 법인 형태는 바뀌었지만 하는 일은 한 가지였습니다.</p>')
 
 
 def page_demo():

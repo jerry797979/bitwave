@@ -60,8 +60,9 @@ tbody th{background:var(--slate-50);font-weight:800}
 td.pe{color:var(--brand);font-weight:700}
 tr:last-child td,tr:last-child th{border-bottom:none}
 
-/* ---------- 콜아웃 (기존 서식. 새로 만들지 말 것) ---------- */
-.callout{background:var(--slate-50);border:1px solid var(--slate-200);border-left:4px solid var(--mint);border-radius:12px;padding:18px 20px;margin:20px 0}
+/* ---------- 콜아웃 (기존 서식. 새로 만들지 말 것) ----------
+   왼쪽 세로줄은 뺐습니다. 어느 사이트에나 있는 모양이라 눈에 걸립니다. */
+.callout{background:var(--slate-50);border:1px solid var(--slate-200);border-radius:12px;padding:18px 20px;margin:20px 0}
 .callout p{margin:0;font-size:15px;color:var(--slate-600)}
 .inlink{color:var(--brand);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 

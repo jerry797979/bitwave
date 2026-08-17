@@ -114,6 +114,104 @@ PAGES = [
 },
 {
  "mock": "ivr_tree",
+ "extra": '''
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Scenario</span>
+      <h2 class="h">실제로 쓰이는 시나리오 네 가지</h2>
+      <p class="lead-txt">구축해 드린 안내 흐름을 그대로 옮겼습니다. 멘트도 실제로 나가는 문장입니다.</p>
+    </div>
+
+    <div style="max-width:760px;margin:0 auto 20px">
+      <h3 style="font-size:19px;font-weight:800;text-align:center">
+        기본형 — 시간대별 안내와 회원 구분
+        <span class="mk done" style="margin-left:8px;vertical-align:middle">제작 무료</span>
+      </h3>
+      <p class="lead-txt" style="text-align:center;font-size:15px;margin-top:8px">
+        전화가 걸려온 뒤 상담원에게 닿기까지 실제로 이렇게 흘러갑니다.
+      </p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-node start"><b>대표번호로 전화가 옵니다</b></div>
+      <div class="flow-link"></div>
+      <span class="flow-cond">지금이 근무시간인지 확인</span>
+      <div class="flow-link"></div>
+      <div class="flow-branch">
+        <div class="fb end"><b>점심시간</b><p>"오후 12시부터 1시까지 점심시간이오니, 1시 이후에 다시 전화 주시길 바랍니다."</p></div>
+        <div class="fb end"><b>업무 시간 외</b><p>"운영시간은 평일 오전 9시부터 오후 6시까지입니다."</p></div>
+        <div class="fb end"><b>휴일</b><p>"금일은 당사 휴일입니다."</p></div>
+        <div class="fb on"><b>근무시간</b><p>다음 단계로 넘어갑니다</p></div>
+      </div>
+      <div class="flow-link"></div>
+      <div class="flow-node say"><b>"회원은 1번, 비회원은 2번을 눌러주세요"</b></div>
+      <div class="flow-link"></div>
+      <div class="flow-branch">
+        <div class="fb on"><b>1번 · 회원</b><p>담당 상담원에게 연결합니다</p></div>
+        <div class="fb on"><b>2번 · 비회원</b><p>해당 부서로 연결합니다</p></div>
+      </div>
+      <div class="flow-link"></div>
+      <span class="flow-cond">받을 사람이 있는지 확인</span>
+      <div class="flow-link"></div>
+      <div class="flow-branch">
+        <div class="fb on"><b>연결 가능</b><p>녹취 고지 후 상담원에게 넘깁니다</p></div>
+        <div class="fb end"><b>모두 통화 중</b><p>"모든 상담원이 통화 중입니다. 잠시 후에 다시 연락 주십시오."</p></div>
+      </div>
+    </div>
+
+    <p class="note" style="text-align:center;max-width:760px;margin:16px auto 0">
+      점심시간·휴일 같은 조건은 관리자 화면에서 날짜와 시간을 직접 지정합니다.
+      명절이나 임시 휴무도 그날만 다른 안내가 나가도록 걸어둘 수 있습니다.
+    </p>
+
+    <div class="steps" style="margin-top:44px">
+      <div class="step">
+        <span class="sn wn c1">2</span>
+        <div>
+          <h4>지점 분기 + 콜백 접수 <span class="mk done" style="margin-left:6px">콜백 30만원</span></h4>
+          <p>지점이 여러 곳일 때 씁니다. 서울·부산·제주처럼 눌러서 고르게 하고,
+            <b>통화량이 많아 연결이 어려우면 기다릴지 번호를 남길지 고르게</b> 합니다.
+            남긴 번호는 다시 읽어 주고 확인까지 받습니다.</p>
+          <p class="cd" style="margin-top:9px;font-size:13.5px;color:var(--slate-500)">
+            실제 멘트 — "계속 기다리시려면 1번, 연락 받으실 번호를 남기시려면 2번을 눌러주십시오."</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="sn wn c2">3</span>
+        <div>
+          <h4>회원번호로 찾아 나누기 <span class="mk done" style="margin-left:6px">DB 검색 30만원</span></h4>
+          <p>회원번호를 누르면 <b>등록된 자료에서 찾아</b> 기존 회원과 비회원을 갈라
+            서로 다른 상담 그룹으로 넘깁니다. 담당자가 정해져 있는 업무에 씁니다.</p>
+          <p class="cd" style="margin-top:9px;font-size:13.5px;color:var(--slate-500)">
+            실제 멘트 — "회원번호를 입력 후 우물 정자를 눌러주세요."</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="sn wn c3">4</span>
+        <div>
+          <h4>대기 인원 안내 + 문자 발송 <span class="mk rest" style="margin-left:6px">서버 구매형</span></h4>
+          <p><b>지금 몇 명이 앞에 기다리는지</b> 숫자로 알려 줍니다.
+            기다릴지 번호를 남길지 고객이 판단할 수 있습니다.
+            전 지점 연락처를 문자로 받아 가는 번호도 함께 둡니다.</p>
+          <p class="cd" style="margin-top:9px;font-size:13.5px;color:var(--slate-500)">
+            실제 멘트 — "현재 대기인원은 XX명입니다. 계속 기다리시려면 1번을…"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer" style="margin-top:34px">
+      <span class="lab">녹취 고지는 꼭 넣습니다</span>
+      <p>
+        상담원에게 넘기기 직전에 <span class="hl">"통화품질 향상과 고객 권익을 위해 통화 내용은 자동으로 녹음됩니다"</span>
+        안내가 나갑니다. 나중에 통화 내용을 확인해야 할 때 <b>고지했다는 기록이 함께 남아야</b>
+        분쟁에서 근거가 됩니다. 시나리오를 짤 때 빠뜨리기 쉬운 부분이라 기본으로 넣어 드립니다.
+      </p>
+    </div>
+  </div>
+</section>''',
  "slug": "ivr", "nav": "ARS·IVR", "eyebrow": "ARS · IVR",
  "title": "ARS·IVR 자동응답 시스템 구축 | 다단계 시나리오·콜백 | 지오테스",
  "desc": "사람이 받지 않아도 되는 전화를 걸러냅니다. 다단계 시나리오, 시간·요일별 분기, 콜백, TTS 음원 편집.",
@@ -433,6 +531,8 @@ jstr = lambda s: '"%s"' % str(s).replace('\\', '\\\\').replace('"', '\\"')
 def render(p):
     others = [x for x in PAGES if x["slug"] != p["slug"]][:4]
 
+    extra_sec = p.get("extra", "")
+
     mock_sec = ""
     if p.get("mock"):
         mtitle, mlead, mfn = mocks.ALL[p["mock"]]
@@ -506,6 +606,7 @@ def render(p):
   </div>
 </section>
 {mock_sec}
+{extra_sec}
 <section>
   <div class="wrap">
     <div class="sec-head">

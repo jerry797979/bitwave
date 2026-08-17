@@ -201,10 +201,15 @@ def dashboard():
 # ---------------------------------------------------------------- 통계
 
 def stats():
-    bars = [("월", 46, ""), ("화", 62, ""), ("수", 58, ""), ("목", 71, ""),
-            ("금", 88, ""), ("토", 34, "alt"), ("일", 18, "alt")]
-    b = "".join(f'<div><i class="{c}" style="height:{h}%"></i><small>{d}</small></div>'
-                for d, h, c in bars)
+    # 값이 없으면 막대는 장식일 뿐입니다. 숫자를 붙이고, 가장 몰리는 날만 진하게 둡니다.
+    bars = [("월", 46, 186), ("화", 62, 248), ("수", 58, 232), ("목", 71, 284),
+            ("금", 88, 352), ("토", 34, 136), ("일", 18, 72)]
+    top = max(v for _, v, _ in bars)
+    b = "".join(
+        f'<div class="{"peak" if h == top else ""}"><em>{n}</em>'
+        f'<i class="{"peak" if h == top else ""}" style="height:{h}%"></i>'
+        f'<small>{d}</small></div>'
+        for d, h, n in bars)
     body = f'''
     <div class="mock-sum c4">
       <div><small>이번 주 통화</small><b>1,284</b></div>

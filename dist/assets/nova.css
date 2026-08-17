@@ -448,7 +448,10 @@ footer .info{font-size:12.5px;color:#64748b}
 .bs-item.mint{border-color:var(--mint)}
 .bs-item.sun{border-color:var(--sun)}
 .bs-item.sun .bs-badge{background:var(--sun);color:var(--ink)}
-.bs-big{flex:0 0 auto;font-family:var(--display);font-weight:800;font-size:36px;line-height:1;color:var(--brand)}
+/* 숫자 폭을 고정해 카드마다 설명 시작 위치가 어긋나지 않게 합니다.
+   '20년' '60여' '1곳'처럼 글자 수가 달라도 같은 자리에서 글이 시작됩니다. */
+.bs-big{flex:0 0 auto;min-width:112px;font-family:var(--display);font-weight:800;font-size:31px;line-height:1.15;color:var(--brand);letter-spacing:-.02em;white-space:nowrap}
+@media(max-width:400px){.bs-big{min-width:96px;font-size:27px}}
 .bs-badge{flex:0 0 auto;background:var(--mint);color:var(--mint-ink);font-weight:800;font-size:15px;border-radius:12px;padding:12px 14px;white-space:nowrap}
 .bs-item b{font-size:16.5px;font-weight:800;display:block}
 .bs-item p{font-size:13px;color:var(--slate-500);margin-top:3px}
